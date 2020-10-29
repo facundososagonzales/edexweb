@@ -76,10 +76,12 @@ public class AltaEdicionDeCurso2 extends HttpServlet {
 			String fechaFMes = fechaFin.substring(5,7); int FFmes = Integer.parseInt(fechaFMes);
 			String fechaFAnio = fechaFin.substring(0,4);  int FFanio= Integer.parseInt(fechaFAnio);
 			int Cupos;
-			if(cupos==null) {
+			System.out.println(cupos + "cuposss");
+			if(cupos.equals("0")) {
 				Cupos=0;
 			}else {
 				Cupos = Integer.parseInt(cupos);
+				System.out.println(Cupos + "cupo");
 			}
 	    	Date fechaInicio1 = new GregorianCalendar(FIanio, (FImes-1), FIdia).getTime();
 	    	Date fechaFin1 = new GregorianCalendar(FFanio, (FFmes-1), FFdia).getTime();
@@ -93,8 +95,6 @@ public class AltaEdicionDeCurso2 extends HttpServlet {
             throw new ServletException(ere.getMessage());
 		}catch(SinDocenteAsignadoException sdae) {
             throw new ServletException(sdae.getMessage());
-		}catch(NumberFormatException nfe) {
-            throw new ServletException(nfe.getMessage());
 		}
 		request.setAttribute("mensaje","La edicion "+name+" fue ingresado con exito");
 		rd = request.getRequestDispatcher("/notificacion.jsp");

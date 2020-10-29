@@ -58,7 +58,7 @@ if(tipo.equals("visitante")){%>
       		<input class="form-control mr-sm-2" Name="CuadroBusqueda" type="search" placeholder="Curso, Programa" aria-label="Search">
       		<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>
     	</form>  -->
-	      
+    	
 	   </div>
 	   <div class="collapse navbar-collapse flex-grow-0" id="navbarSupportedContent">  
 	      <ul class="navbar-nav">
@@ -214,7 +214,7 @@ if(tipo.equals("docente")){%>
 	          <a class="dropdown-item" href="seguirUsuario.jsp">Seguir a un usuario</a>
 			  <a class="dropdown-item" href="dejarDeSeguirUsuario.jsp">Dejar de seguir a un usuario</a>
 			  <a class="dropdown-item" href="#">Agregar Curso a programa formacion</a>
-		      <a class="dropdown-item" href="#">Seleccionar estudiante para una edicion de curso</a>
+		      <a class="dropdown-item" href="SeleccionarEstudiantesEdicionCurso.jsp">Seleccionar estudiante para una edicion de curso</a>
 	          <a class="dropdown-item" href="modificarDatosUsuario.jsp">Modificar datos de usuario</a>
 	        </div>
 	      </li>

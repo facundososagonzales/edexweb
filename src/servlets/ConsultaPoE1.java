@@ -76,17 +76,17 @@ public class ConsultaPoE1 extends HttpServlet {
 		}
 		
 	
-		/*if (request.getParameter("boton").equals("edicion")){
+		if (request.getParameter("boton").equals("edicion")){
 			try {
-				DtEdicionDetalle dt = icon.seleccionarEdicion(datoF);
+				DtEdicionDetalle dt = icon.seleccionarEdicionCat(datoF);
 				String infoEd = "EDICION: \n"+dt.toString();
-				request.setAttribute("Mensaje","Informacion de Edicion: \n"+infoEd+" ");
+				request.setAttribute("mensaje","Informacion de Edicion: \n"+infoEd+" ");
 				
 			}catch(ExisteNomEdicionException e) {
 				throw new ServletException(e.getMessage());
 			}
 			
-		}else */
+		}else 
 		if (request.getParameter("boton").equals("progFormacion")) {
 			try {
 				DtProgCurso dt = icon.seleccionarPrograma(datoF);

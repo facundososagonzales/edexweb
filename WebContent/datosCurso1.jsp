@@ -46,9 +46,9 @@
       <input type="text" name="DatoF" class="form-control" id="inputDatoF">
     </div>
    </div>
-   	<!-- 
+   	
    	<button type="button" class="btn btn-primary" onclick="procesar('edicion')">Consultar Edicion</button>
-	 -->
+	 
 	<button type="button" class="btn btn-primary" onclick="procesar('progFormacion')">Consultar Programa de Formacion</button>
 	
 	<script type="text/javascript">
