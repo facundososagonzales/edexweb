@@ -2,6 +2,7 @@ package servlets;
 
 import java.io.IOException;
 
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpSession;
 import datatypes.DtEdicionDetalle;
 import interfaces.Fabrica;
 import interfaces.IControladorSeleccionarEstEdiCurso;
+
 
 /**
  * Servlet implementation class SeleccionarEstudiantesEdicionCurso2
@@ -44,6 +46,14 @@ public class SeleccionarEstudiantesEdicionCurso2 extends HttpServlet {
 		RequestDispatcher rd;
 		
 		String edicion= request.getParameter("ListEdicion");
+		request.setAttribute("edicion", edicion);
+		rd= request.getRequestDispatcher("SeleccionarEstudiantesEdicionCurso3.jsp");
+		String nomIns= request.getParameter("nomIns");
+		request.setAttribute("instituto", nomIns);
+		rd= request.getRequestDispatcher("SeleccionarEstudiantesEdicionCurso3.jsp");
+		String curso= request.getParameter("curso");
+		request.setAttribute("curso", curso);
+		rd= request.getRequestDispatcher("SeleccionarEstudiantesEdicionCurso3.jsp");
 		DtEdicionDetalle dtEdicion;
 		
 		Fabrica fabrica = Fabrica.getInstancia();

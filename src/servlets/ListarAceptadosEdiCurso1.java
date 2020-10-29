@@ -1,7 +1,6 @@
 package servlets;
 
 import java.io.IOException;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,21 +12,22 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import datatypes.DtEstudiante;
 import interfaces.Fabrica;
+import interfaces.IControladorListarAceptadosEdiCurso;
 import interfaces.IControladorSeleccionarEstEdiCurso;
 
-
 /**
- * Servlet implementation class SeleccionarEstudiantesEdicionCurso1
+ * Servlet implementation class ListarEstudiantesEdiCurso1;
  */
-@WebServlet("/SeleccionarEstudiantesEdicionCurso1")
-public class SeleccionarEstudiantesEdicionCurso1 extends HttpServlet {
+@WebServlet("/ListarAceptadosEdiCurso1")
+public class ListarAceptadosEdiCurso1 extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public SeleccionarEstudiantesEdicionCurso1() {
+    public ListarAceptadosEdiCurso1() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -47,18 +47,21 @@ public class SeleccionarEstudiantesEdicionCurso1 extends HttpServlet {
 		RequestDispatcher rd;
 		
 		String Curso= request.getParameter("ListCurso");
-		String nomIns= request.getParameter("nomIns");
+		String nomIns=request.getParameter("nomIns");
 		
 		Fabrica fabrica = Fabrica.getInstancia();
-		IControladorSeleccionarEstEdiCurso icseec = fabrica.getIControladorSeleccionarEstEdiCurso();
+		IControladorListarAceptadosEdiCurso icseec = fabrica.getIControladorListarAceptadosEdiCurso();
 		HttpSession sesion = request.getSession();
 		
 		List<String> edicion = new ArrayList<>();
+		List<String> aceptados = new ArrayList<>();
 		icseec.ingresarInstituto(nomIns);
 		icseec.ingresarCurso(Curso);
 		edicion=icseec.listarEdicion();
+		aceptados=icseec.listarEstudiantesInscriptos();
 		request.setAttribute("listaEdicion", edicion);
-		rd= request.getRequestDispatcher("SeleccionarEstudiantesEdicionCurso2.jsp");
+		request.setAttribute("listaAceptados", aceptados);
+		rd= request.getRequestDispatcher("listarAceptadosEdiCurso2.jsp");
 		rd.forward(request, response);
 	}
 

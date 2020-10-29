@@ -12,11 +12,16 @@
 </head>
 <% 
 	DtEdicionDetalle dtEdicion = (DtEdicionDetalle)request.getAttribute("DatosEdicionSeleccionada");
+	String edicion =(String)request.getAttribute("edicion");
+	String nomIns =(String)request.getAttribute("instituto");
+	String curso =(String)request.getAttribute("curso");
 %>
 <body>
-<form action=SeleccionarEstudiantesEdicionCurso3 method="post">
+	<form action=SeleccionarEstudiantesEdicionCurso3 method="post">
 		<input type="hidden" name="boton" id="boton" value="">
 		<input type="hidden" name="edi" value="<%=edicion %>">
+		<input type="hidden" name="ins" value="<%=nomIns %>">
+		<input type="hidden" name="cur" value="<%=curso %>">
 	 	<div class="input-group">
 			  	 <div class="input-group-prepend">
 			        <span class="input-group-text">Información de edición de curso</span>
@@ -25,8 +30,8 @@
 		</div>
 		
 		<button type="submit" class="btn btn-primary" >Mostrar estudiantes</button>
-		
-		</form>
-		
+	</form>
+	
+		 <%@include file="/footer.jsp" %>
 </body>
 </html>

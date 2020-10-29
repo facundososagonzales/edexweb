@@ -1,7 +1,6 @@
 package servlets;
 
 import java.io.IOException;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,20 +13,20 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import interfaces.Fabrica;
+import interfaces.IControladorListarAceptadosEdiCurso;
 import interfaces.IControladorSeleccionarEstEdiCurso;
 
-
 /**
- * Servlet implementation class SeleccionarEstudiantesEdicionCurso1
+ * Servlet implementation class SeleccionarEstudiantesEdicionCurso
  */
-@WebServlet("/SeleccionarEstudiantesEdicionCurso1")
-public class SeleccionarEstudiantesEdicionCurso1 extends HttpServlet {
+@WebServlet("/ListarAceptadosEdiCurso")
+public class ListarAceptadosEdiCurso extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public SeleccionarEstudiantesEdicionCurso1() {
+    public ListarAceptadosEdiCurso() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -45,21 +44,24 @@ public class SeleccionarEstudiantesEdicionCurso1 extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		RequestDispatcher rd;
-		
-		String Curso= request.getParameter("ListCurso");
-		String nomIns= request.getParameter("nomIns");
-		
+		String ListIns= request.getParameter("ListIns");
+		request.setAttribute("instituto", ListIns);
+		rd= request.getRequestDispatcher("SeleccionarEstudiantesEdicionCurso1.jsp");
 		Fabrica fabrica = Fabrica.getInstancia();
-		IControladorSeleccionarEstEdiCurso icseec = fabrica.getIControladorSeleccionarEstEdiCurso();
+		IControladorListarAceptadosEdiCurso icseec = fabrica.getIControladorListarAceptadosEdiCurso();
 		HttpSession sesion = request.getSession();
+			
+		List<String> curso = new ArrayList<>();
+		icseec.ingresarInstituto(ListIns);
+		curso=icseec.listarCursos();
+		request.setAttribute("listaCursos", curso);
+		rd= request.getRequestDispatcher("listarAceptadosEdiCurso1.jsp");
 		
-		List<String> edicion = new ArrayList<>();
-		icseec.ingresarInstituto(nomIns);
-		icseec.ingresarCurso(Curso);
-		edicion=icseec.listarEdicion();
-		request.setAttribute("listaEdicion", edicion);
-		rd= request.getRequestDispatcher("SeleccionarEstudiantesEdicionCurso2.jsp");
+
+		request.setAttribute("nombre instituto", ListIns);
+		rd= request.getRequestDispatcher("listarAceptadosEdiCurso1.jsp");
 		rd.forward(request, response);
 	}
+	
 
 }

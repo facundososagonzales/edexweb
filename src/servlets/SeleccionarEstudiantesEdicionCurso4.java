@@ -2,8 +2,6 @@ package servlets;
 
 import java.io.IOException;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -18,16 +16,16 @@ import interfaces.IControladorSeleccionarEstEdiCurso;
 
 
 /**
- * Servlet implementation class SeleccionarEstudiantesEdicionCurso1
+ * Servlet implementation class SeleccionarEstudiantesEdicionCurso4
  */
-@WebServlet("/SeleccionarEstudiantesEdicionCurso1")
-public class SeleccionarEstudiantesEdicionCurso1 extends HttpServlet {
+@WebServlet("/SeleccionarEstudiantesEdicionCurso4")
+public class SeleccionarEstudiantesEdicionCurso4 extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public SeleccionarEstudiantesEdicionCurso1() {
+    public SeleccionarEstudiantesEdicionCurso4() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -45,21 +43,20 @@ public class SeleccionarEstudiantesEdicionCurso1 extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		RequestDispatcher rd;
-		
-		String Curso= request.getParameter("ListCurso");
-		String nomIns= request.getParameter("nomIns");
-		
 		Fabrica fabrica = Fabrica.getInstancia();
 		IControladorSeleccionarEstEdiCurso icseec = fabrica.getIControladorSeleccionarEstEdiCurso();
 		HttpSession sesion = request.getSession();
+		String logNick = (String)sesion.getAttribute("usuarioLogueado");
+		String estudiante = request.getParameter("ListEst");
+		String estado = request.getParameter("ListEstado");
 		
-		List<String> edicion = new ArrayList<>();
-		icseec.ingresarInstituto(nomIns);
-		icseec.ingresarCurso(Curso);
-		edicion=icseec.listarEdicion();
-		request.setAttribute("listaEdicion", edicion);
-		rd= request.getRequestDispatcher("SeleccionarEstudiantesEdicionCurso2.jsp");
-		rd.forward(request, response);
+		if(estudiante.equals("Aceptado")) {
+			icseec.ingresarEstudiante(logNick);
+		}
+		
+		if(estado.equals("Rechazado")) {
+			icseec.seleccionarEstadoEstudiante(estado);
+		}
 	}
 
 }

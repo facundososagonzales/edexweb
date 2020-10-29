@@ -1,6 +1,7 @@
 package servlets;
 
 import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,8 +58,6 @@ public class SeleccionarEstudiantesEdicionCurso extends HttpServlet {
 		rd= request.getRequestDispatcher("SeleccionarEstudiantesEdicionCurso1.jsp");
 		
 
-		request.setAttribute("nombre instituto", ListIns);
-		rd= request.getRequestDispatcher("SeleccionarEstudiantesEdicionCurso1.jsp");
 		rd.forward(request, response);
 	}
 	

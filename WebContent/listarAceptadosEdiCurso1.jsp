@@ -6,28 +6,24 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<title>Listar Aceptados Edición de curso</title>
 		<%@include file="/header.jsp" %>
 </head>
-
 <%
-List <String> listaEdicion = new ArrayList<>();
-listaEdicion = (List<String>)request.getAttribute("listaEdicion");
+List <String> listaCurso = new ArrayList<>();
+listaCurso = (List<String>)request.getAttribute("listaCursos");
 String nomIns =(String)request.getAttribute("instituto");
-String curso =(String)request.getAttribute("curso");
-
 
 %>
 <body>
-<form action="SeleccionarEstudiantesEdicionCurso2" method="post">
-<div class="form-group col-md-6">
+<form action="ListarAceptadosEdiCurso1" method="post">
 			<input type="hidden" name="nomIns" value="<%=nomIns%>">
-			<input type="hidden" name="curso" value="<%=curso%>">
-			<label for="inputRol">Seleccionar edici�n:</label>
-			<select id="ListEdicion" name="ListEdicion" class="form-control" >
-				<option disabled selected>-- select an option --</option>
+			<div class="form-group col-md-6">
+			<label for="inputRol">Seleccionar curso:</label>
+			<select id="ListCurso" name="ListCurso" class="form-control" >
+				<option disabled selected> Seleccione una opción</option>
 		
-		<%for (String p: listaEdicion){%>
+		<%for (String p: listaCurso){%>
 				<option><%=p %></option>
 		<%}%>
 			

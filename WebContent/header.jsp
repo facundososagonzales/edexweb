@@ -9,6 +9,10 @@ if(nick==null){
 %>
 
 <%
+
+
+
+
 if(tipo.equals("visitante")){%>
 
 
@@ -52,15 +56,16 @@ if(tipo.equals("visitante")){%>
 	        </div>
 	      </li>   
 	      </ul>	      
-	      
-	      	      
-	    <!-- <form action="BusquedaCursoProg" method="post" class="form-inline my-2 my-lg-0">
-      		<input class="form-control mr-sm-2" Name="CuadroBusqueda" type="search" placeholder="Curso, Programa" aria-label="Search">
-      		<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>
-    	</form>  -->
     	
 	   </div>
+
+	    <form action="BusquedaCursoProg" method="post" class="form-inline my-2 my-lg-0">
+      		<input class="form-control mr-sm-2" Name="CuadroBusqueda" type="search" placeholder="Curso, Programa" aria-label="Search">
+      		<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>
+    	</form>
+	   
 	   <div class="collapse navbar-collapse flex-grow-0" id="navbarSupportedContent">  
+	   
 	      <ul class="navbar-nav">
 	      
 		      <li class="nav-item active">
@@ -201,7 +206,7 @@ if(tipo.equals("docente")){%>
 	          <a class="dropdown-item" href="consultaEdicionCurso.jsp">Consulta de Edición de Curso</a>
 	          <a class="dropdown-item" href="#">Consulta de Usuario</a>
 	          <a class="dropdown-item" href="#">Consulta programa formacion</a>
-	          <a class="dropdown-item" href="#">Listar aceptados a una edicion de curso</a>
+	          <a class="dropdown-item" href="listarAceptaodsEdiCurso.jsp">Listar aceptados a una edicion de curso</a>
 	          <a class="dropdown-item" href="#">Listar resultados de inscripciones a ediciones de cursos</a>
 	        </div>
 	      </li>
