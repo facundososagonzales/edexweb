@@ -6,57 +6,38 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Listar Aceptados EdiciÃ³n de curso</title>
+<title>Listar Aceptados Edicion de curso</title>
 		<%@include file="/header.jsp" %>
 </head>
 
 <%
 List <String> listaEdicion = new ArrayList<>();
-List <String> listaAceptados = new ArrayList<>();
 listaEdicion = (List<String>)request.getAttribute("listaEdicion");
-listaAceptados = (List<String>)request.getAttribute("listaAceptados");
+String nomIns =(String)request.getAttribute("instituto");
+String curso =(String)request.getAttribute("Curso");
+
 
 %>
 <body>
-
-<h1>Datos de las ediciones del curso ></h1>
-	<table class="table table-striped">
-		<thead>
-			<tr>
-				<th scope="col">Informacion</th>
-			</tr>
-		</thead>
-		<tbody>
+<form action="ListarAceptadosEdiCurso2" method="post">
+<div class="form-group col-md-6">
+			<input type="hidden" name="nomIns" value="<%=nomIns%>">
+			<input type="hidden" name="curso" value="<%=curso%>">
+			<label for="inputRol">Seleccionar edición:</label>
+			<select id="ListEdicion" name="ListEdicion" class="form-control" >
+				<option disabled selected>-- Seleccione una opcion --</option>
 		
-			<tr>
-				<% for (String p: listaEdicion){%>
-				<td><%=p %></td>
-				<%}%>
-			</tr>
-		</tbody>
-	</table>
-
-
-<h1>Datos de los inscriptos aceptados ></h1>
-	<table class="table table-striped">
-		<thead>
-			<tr>
-				<th scope="col">Informacion</th>
-			</tr>
-		</thead>
-		<tbody>
-		
-			<tr>
-				<% for (String p: listaAceptados){%>
-				<td><%=p %></td>
-				<%}%>
-			</tr>
-		</tbody>
-	</table>
-
-
+		<%for (String p: listaEdicion){%>
+				<option><%=p %></option>
+		<%}%>
+			
+		    </select>
+		    </div>
 	    
 	  
+	<button type="submit" class="btn btn-primary" >Confirmar</button>
+	
+	</form>
 	
 		 <%@include file="/footer.jsp" %>
 </body>

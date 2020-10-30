@@ -11,15 +11,28 @@
 <%@ page import="java.util.List" %>
 <%@ page import="datatypes.DtEstudiante" %>
 <% 
-	String edicion =(String)request.getAttribute("edicion");
-	ArrayList<DtEstudiante> estudiantes = (ArrayList<DtEstudiante>) request.getAttribute("DatosEstudiantes");
-	List<String> listaEst = (List<String>)request.getAttribute("estudiantes");
+
+String edicion =(String)request.getAttribute("edicion");
+String nomIns = (String)request.getAttribute("nomIns");
+String curso = (String)request.getAttribute("curso");
+ArrayList<DtEstudiante> estudiantes = (ArrayList<DtEstudiante>) request.getAttribute("DatosEstudiantes");
+List<String> listaEst = (List<String>)request.getAttribute("estudiantes");
+for (DtEstudiante dte : estudiantes) {
+	System.out.println(dte.getNick() + " nick");
+}
 
 	
 %>
+
+
 <body>
 <form action=SeleccionarEstudiantesEdicionCurso4 method="post">
-	<h1>Estudiantes inscriptos en la edicion<%=edicion%></h1>
+
+	<input type="hidden" name="edicion" value="<%=edicion %>">
+	<input type="hidden" name="nomIns" value="<%=nomIns %>">
+	<input type="hidden" name="curso" value="<%=curso %>">
+	
+	<h1>Estudiantes inscriptos en la edicion <%=edicion%></h1>
 	<table class="table table-striped">
 		<thead>
 			<tr>

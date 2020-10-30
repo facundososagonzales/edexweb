@@ -47,13 +47,10 @@ public class SeleccionarEstudiantesEdicionCurso2 extends HttpServlet {
 		
 		String edicion= request.getParameter("ListEdicion");
 		request.setAttribute("edicion", edicion);
-		rd= request.getRequestDispatcher("SeleccionarEstudiantesEdicionCurso3.jsp");
 		String nomIns= request.getParameter("nomIns");
 		request.setAttribute("instituto", nomIns);
-		rd= request.getRequestDispatcher("SeleccionarEstudiantesEdicionCurso3.jsp");
 		String curso= request.getParameter("curso");
 		request.setAttribute("curso", curso);
-		rd= request.getRequestDispatcher("SeleccionarEstudiantesEdicionCurso3.jsp");
 		DtEdicionDetalle dtEdicion;
 		
 		Fabrica fabrica = Fabrica.getInstancia();

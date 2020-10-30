@@ -47,18 +47,18 @@ public class SeleccionarEstudiantesEdicionCurso3 extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		RequestDispatcher rd;
 		
-		String Curso= request.getParameter("ListCurso");
+		String curso= request.getParameter("curso");
 		String nomIns=request.getParameter("nomIns");
 		String edicion=request.getParameter("edicion");
 		System.out.println(nomIns+" inst");
-		System.out.println(Curso+" edicion");
+		System.out.println(curso+" edicion");
 		System.out.println(edicion+" curso");
 		Fabrica fabrica = Fabrica.getInstancia();
 		IControladorSeleccionarEstEdiCurso icseec = fabrica.getIControladorSeleccionarEstEdiCurso();
 		HttpSession sesion = request.getSession();
 		
 		icseec.ingresarInstituto(nomIns);
-		icseec.ingresarCurso(Curso);
+		icseec.ingresarCurso(curso);
 		icseec.ingresarEdicion(edicion);
 		ArrayList<DtEstudiante> dtEst = new ArrayList<>();
 		dtEst = icseec.listarEstudiantesInscriptos();
@@ -66,8 +66,11 @@ public class SeleccionarEstudiantesEdicionCurso3 extends HttpServlet {
 		estudiantes = icseec.listarEstudiantes();
 		request.setAttribute("DatosEstudiantes", dtEst);
 		request.setAttribute("estudiantes", estudiantes);
+		request.setAttribute("nomIns", nomIns);
+		request.setAttribute("curso", curso);
+		request.setAttribute("edicion", edicion);
 		rd= request.getRequestDispatcher("SeleccionarEstudiantesEdicionCurso4.jsp");
-		
+		rd.forward(request, response);
 	}
 
 }

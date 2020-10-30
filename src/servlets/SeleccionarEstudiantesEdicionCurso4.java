@@ -45,18 +45,22 @@ public class SeleccionarEstudiantesEdicionCurso4 extends HttpServlet {
 		RequestDispatcher rd;
 		Fabrica fabrica = Fabrica.getInstancia();
 		IControladorSeleccionarEstEdiCurso icseec = fabrica.getIControladorSeleccionarEstEdiCurso();
+		String curso= request.getParameter("curso");
+		String nomIns=request.getParameter("nomIns");
+		String edicion=request.getParameter("edicion");
 		HttpSession sesion = request.getSession();
-		String logNick = (String)sesion.getAttribute("usuarioLogueado");
 		String estudiante = request.getParameter("ListEst");
 		String estado = request.getParameter("ListEstado");
+		icseec.ingresarInstituto(nomIns);
+		icseec.ingresarCurso(curso);
+		icseec.ingresarEdicion(edicion);
 		
-		if(estudiante.equals("Aceptado")) {
-			icseec.ingresarEstudiante(logNick);
-		}
+		icseec.ingresarEstudiante(estudiante);
+		icseec.seleccionarEstadoEstudiante(estado);
 		
-		if(estado.equals("Rechazado")) {
-			icseec.seleccionarEstadoEstudiante(estado);
-		}
+		request.setAttribute("mensaje", "Estado de inscripcion actualizado");
+		rd= request.getRequestDispatcher("/notificacion.jsp");
+		rd.forward(request, response);
 	}
 
 }

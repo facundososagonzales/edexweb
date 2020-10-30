@@ -6,9 +6,9 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Listar Aceptados Edición de curso</title>
-		<%@include file="/header.jsp" %>
+<title>Listar Aceptados Edicion de curso</title>
 </head>
+<%@include file="/header.jsp" %>
 <%
 List <String> listaCurso = new ArrayList<>();
 listaCurso = (List<String>)request.getAttribute("listaCursos");
@@ -21,7 +21,7 @@ String nomIns =(String)request.getAttribute("instituto");
 			<div class="form-group col-md-6">
 			<label for="inputRol">Seleccionar curso:</label>
 			<select id="ListCurso" name="ListCurso" class="form-control" >
-				<option disabled selected> Seleccione una opción</option>
+				<option disabled selected>-- Seleccione una opcion --</option>
 		
 		<%for (String p: listaCurso){%>
 				<option><%=p %></option>
@@ -35,6 +35,7 @@ String nomIns =(String)request.getAttribute("instituto");
 	
 	</form>
 	
+		
 		 <%@include file="/footer.jsp" %>
 </body>
 </html>

@@ -6,17 +6,15 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Listar Aceptados Edición de curso</title>
+<title>Insert title here</title>
 <%@include file="/header.jsp" %>
 <%@ page import="interfaces.Fabrica" %>
 <%@ page import="interfaces.IControladorListarAceptadosEdiCurso" %>
-
 </head>
 <% 
 Fabrica fabrica = Fabrica.getInstancia();
-IControladorListarAceptadosEdiCurso icseec = fabrica.getIControladorListarAceptadosEdiCurso();
-
-List<String> lista =icseec.listarInstitutos();
+IControladorListarAceptadosEdiCurso iciec = fabrica.getIControladorListarAceptadosEdiCurso();
+List<String> lista = iciec.listarInstitutos();
 %>
 <body>
 	<form action="ListarAceptadosEdiCurso" method="post">
@@ -24,7 +22,7 @@ List<String> lista =icseec.listarInstitutos();
 			<div class="form-group col-md-6">
 			<label for="inputRol">Seleccionar Instituto :</label>
 			<select id="ListIns" name="ListIns" class="form-control" >
-				<option disabled selected>-- select an option --</option>
+				<option disabled selected>-- Seleccione una opcion --</option>
 		
 		<%for (String p: lista){%>
 				<option><%=p %></option>

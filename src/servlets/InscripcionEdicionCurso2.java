@@ -72,7 +72,7 @@ public class InscripcionEdicionCurso2 extends HttpServlet {
 			List<String> edicion = new ArrayList<>();
 			iciec.ingresarCategoria(nomCatIns);
 			iciec.ingresarCursoporCat(Curso);
-			edicion=iciec.listarEdicion();
+			edicion=iciec.listarEdicionCat();
 			request.setAttribute("listaEdicion", edicion);
 			rd= request.getRequestDispatcher("InscripcionEdicionCurso3.jsp");
 			rd.forward(request, response);

@@ -206,7 +206,7 @@ if(tipo.equals("docente")){%>
 	          <a class="dropdown-item" href="consultaEdicionCurso.jsp">Consulta de Edición de Curso</a>
 	          <a class="dropdown-item" href="#">Consulta de Usuario</a>
 	          <a class="dropdown-item" href="#">Consulta programa formacion</a>
-	          <a class="dropdown-item" href="listarAceptaodsEdiCurso.jsp">Listar aceptados a una edicion de curso</a>
+	          <a class="dropdown-item" href="listarAceptadosEdiCurso.jsp">Listar aceptados a una edicion de curso</a>
 	          <a class="dropdown-item" href="#">Listar resultados de inscripciones a ediciones de cursos</a>
 	        </div>
 	      </li>

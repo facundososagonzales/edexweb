@@ -1,7 +1,6 @@
 package servlets;
 
 import java.io.IOException;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,21 +12,23 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import datatypes.DtEdicionDetalle;
+import excepciones.ExisteNomEdicionException;
 import interfaces.Fabrica;
-import interfaces.IControladorListarAceptadosEdiCurso;
+import interfaces.IControladorListarAceptadosEdiCurso;;
 
 
 /**
- * Servlet implementation class ListarAceptadosEdiCurso1
+ * Servlet implementation class ListarAceptadosEdiCurso2
  */
-@WebServlet("/ListarAceptadosEdiCurso1")
-public class ListarAceptadosEdiCurso1 extends HttpServlet {
+@WebServlet("/ListarAceptadosEdiCurso2")
+public class ListarAceptadosEdiCurso2 extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ListarAceptadosEdiCurso1() {
+    public ListarAceptadosEdiCurso2() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -46,22 +47,37 @@ public class ListarAceptadosEdiCurso1 extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		RequestDispatcher rd;
 		
-		String curso= request.getParameter("ListCurso");
+		String edicion= request.getParameter("ListEdicion");
+		request.setAttribute("edicion", edicion);
 		String nomIns= request.getParameter("nomIns");
+		request.setAttribute("instituto", nomIns);
+		String curso= request.getParameter("curso");
+		request.setAttribute("curso", curso);
+		DtEdicionDetalle dtEdicion;
+		List<String> inscriptos = new ArrayList<>();
 		
 		Fabrica fabrica = Fabrica.getInstancia();
 		IControladorListarAceptadosEdiCurso icseec = fabrica.getIControladorListarAceptadosEdiCurso();
 		HttpSession sesion = request.getSession();
+	
 		
-		List<String> edicion = new ArrayList<>();
-		icseec.ingresarInstituto(nomIns);
-		icseec.ingresarCurso(curso);
-		edicion=icseec.listarEdicion();
-		request.setAttribute("Curso", curso);
-		request.setAttribute("instituto", nomIns);
-		request.setAttribute("listaEdicion", edicion);
-		rd= request.getRequestDispatcher("listarAceptadosEdiCurso2.jsp");
-		rd.forward(request, response);
+		try {		
+			icseec.ingresarEdicion(edicion);
+			dtEdicion= icseec.seleccionarEdicion(edicion);
+			inscriptos=icseec.listarEstudiantesInscriptos();
+			
+			
+	
+			request.setAttribute("DatosEdicionSeleccionada", dtEdicion);
+			rd= request.getRequestDispatcher("listarAceptadosEdiCurso3.jsp");
+			request.setAttribute("EstudiantesInscriptos", inscriptos);
+			rd= request.getRequestDispatcher("listarAceptadosEdiCurso3.jsp");
+			
+			rd.forward(request, response);
+			} catch (ExisteNomEdicionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	}
 
 }

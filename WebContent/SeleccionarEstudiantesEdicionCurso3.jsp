@@ -19,9 +19,9 @@
 <body>
 	<form action=SeleccionarEstudiantesEdicionCurso3 method="post">
 		<input type="hidden" name="boton" id="boton" value="">
-		<input type="hidden" name="edi" value="<%=edicion %>">
-		<input type="hidden" name="ins" value="<%=nomIns %>">
-		<input type="hidden" name="cur" value="<%=curso %>">
+		<input type="hidden" name="edicion" value="<%=edicion %>">
+		<input type="hidden" name="nomIns" value="<%=nomIns %>">
+		<input type="hidden" name="curso" value="<%=curso %>">
 	 	<div class="input-group">
 			  	 <div class="input-group-prepend">
 			        <span class="input-group-text">Información de edición de curso</span>

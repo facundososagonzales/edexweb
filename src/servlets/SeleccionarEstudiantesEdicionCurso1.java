@@ -46,7 +46,7 @@ public class SeleccionarEstudiantesEdicionCurso1 extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		RequestDispatcher rd;
 		
-		String Curso= request.getParameter("ListCurso");
+		String curso= request.getParameter("ListCurso");
 		String nomIns= request.getParameter("nomIns");
 		
 		Fabrica fabrica = Fabrica.getInstancia();
@@ -55,8 +55,10 @@ public class SeleccionarEstudiantesEdicionCurso1 extends HttpServlet {
 		
 		List<String> edicion = new ArrayList<>();
 		icseec.ingresarInstituto(nomIns);
-		icseec.ingresarCurso(Curso);
+		icseec.ingresarCurso(curso);
 		edicion=icseec.listarEdicion();
+		request.setAttribute("Curso", curso);
+		request.setAttribute("instituto", nomIns);
 		request.setAttribute("listaEdicion", edicion);
 		rd= request.getRequestDispatcher("SeleccionarEstudiantesEdicionCurso2.jsp");
 		rd.forward(request, response);

@@ -1,6 +1,7 @@
 package servlets;
 
 import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,10 +15,9 @@ import javax.servlet.http.HttpSession;
 
 import interfaces.Fabrica;
 import interfaces.IControladorListarAceptadosEdiCurso;
-import interfaces.IControladorSeleccionarEstEdiCurso;
 
 /**
- * Servlet implementation class SeleccionarEstudiantesEdicionCurso
+ * Servlet implementation class ListarAceptadosEdiCurso
  */
 @WebServlet("/ListarAceptadosEdiCurso")
 public class ListarAceptadosEdiCurso extends HttpServlet {
@@ -58,8 +58,6 @@ public class ListarAceptadosEdiCurso extends HttpServlet {
 		rd= request.getRequestDispatcher("listarAceptadosEdiCurso1.jsp");
 		
 
-		request.setAttribute("nombre instituto", ListIns);
-		rd= request.getRequestDispatcher("listarAceptadosEdiCurso1.jsp");
 		rd.forward(request, response);
 	}
 	
