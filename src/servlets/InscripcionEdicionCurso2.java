@@ -12,8 +12,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import interfaces.Fabrica;
-import interfaces.IControladorInsEdicionCurso;
+
+import publicadores.ControladorInsEdicionCursoPublish;
+import publicadores.ControladorInsEdicionCursoPublishService;
+import publicadores.ControladorInsEdicionCursoPublishServiceLocator;
 
 /**
  * Servlet implementation class InscripcionEdicionCurso2
@@ -47,37 +49,80 @@ public class InscripcionEdicionCurso2 extends HttpServlet {
 		String Curso= request.getParameter("ListCurso");
 		String CatInsLabel=request.getParameter("CatInsLabel");
 		String nomCatIns=request.getParameter("nomCatIns");
-		
-		Fabrica fabrica = Fabrica.getInstancia();
-		IControladorInsEdicionCurso iciec = fabrica.getIControladorInsEdicionCurso();
+	
 		HttpSession sesion = request.getSession();
 		
 		
-	if (CatInsLabel.equals("Instituto"))
+	
+			try {
+				if (CatInsLabel.equals("Instituto"))
+					
+				{
+					
+				String[] edicion=null;
+				ingresarInstituto(nomCatIns);
+				ingresarCursoInstituto(Curso);
+				edicion=listarEdicion();
+				request.setAttribute("listaEdicion", edicion);
+				rd= request.getRequestDispatcher("InscripcionEdicionCurso3.jsp");
+				rd.forward(request, response);
 			
-		{
-			
-			List<String> edicion = new ArrayList<>();
-			iciec.ingresarInstituto(nomCatIns);
-			iciec.ingresarCursoInstituto(Curso);
-			edicion=iciec.listarEdicion();
-			request.setAttribute("listaEdicion", edicion);
-			rd= request.getRequestDispatcher("InscripcionEdicionCurso3.jsp");
-			rd.forward(request, response);
-		
-		}
-	if (CatInsLabel.equals("Categoría")) 
-		{
+			}
+		if (CatInsLabel.equals("Categoría")) 
+			{
 
-			List<String> edicion = new ArrayList<>();
-			iciec.ingresarCategoria(nomCatIns);
-			iciec.ingresarCursoporCat(Curso);
-			edicion=iciec.listarEdicionCat();
-			request.setAttribute("listaEdicion", edicion);
-			rd= request.getRequestDispatcher("InscripcionEdicionCurso3.jsp");
-			rd.forward(request, response);
-		}
+				String[] edicion=null;
+				ingresarCategoria(nomCatIns);
+				ingresarCursoporCat(Curso);
+				edicion=listarEdicionCat();
+				request.setAttribute("listaEdicion", edicion);
+				rd= request.getRequestDispatcher("InscripcionEdicionCurso3.jsp");
+				rd.forward(request, response);
+			}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 	
 	}
 
+	
+	public void ingresarInstituto(String ListCatIns) throws Exception {
+		ControladorInsEdicionCursoPublishService ciecp = new ControladorInsEdicionCursoPublishServiceLocator();
+		ControladorInsEdicionCursoPublish port= ciecp.getControladorInsEdicionCursoPublishPort();
+		port.ingresarInstituto(ListCatIns);
+	}
+	
+	public void ingresarCategoria(String ListCatIns) throws Exception {
+		ControladorInsEdicionCursoPublishService ciecp = new ControladorInsEdicionCursoPublishServiceLocator();
+		ControladorInsEdicionCursoPublish port= ciecp.getControladorInsEdicionCursoPublishPort();
+		port.ingresarCategoria(ListCatIns);
+	}
+	
+	public void ingresarCursoInstituto(String codCur) throws Exception {
+		ControladorInsEdicionCursoPublishService ciecp = new ControladorInsEdicionCursoPublishServiceLocator();
+		ControladorInsEdicionCursoPublish port= ciecp.getControladorInsEdicionCursoPublishPort();
+		port.ingresarCursoInstituto(codCur);
+	}
+	
+	public void ingresarCursoporCat(String codCur) throws Exception {
+		ControladorInsEdicionCursoPublishService ciecp = new ControladorInsEdicionCursoPublishServiceLocator();
+		ControladorInsEdicionCursoPublish port= ciecp.getControladorInsEdicionCursoPublishPort();
+		port.ingresarCursoporCat(codCur);
+	}
+	
+	public String[] listarEdicion() throws Exception {
+		ControladorInsEdicionCursoPublishService ciecp = new ControladorInsEdicionCursoPublishServiceLocator();
+		ControladorInsEdicionCursoPublish port= ciecp.getControladorInsEdicionCursoPublishPort();
+		return port.listarEdicion();
+	}
+	
+	public String[] listarEdicionCat() throws Exception {
+		ControladorInsEdicionCursoPublishService ciecp = new ControladorInsEdicionCursoPublishServiceLocator();
+		ControladorInsEdicionCursoPublish port= ciecp.getControladorInsEdicionCursoPublishPort();
+		return port.listarEdicionCat();
+	}
+	
+	
 }

@@ -12,8 +12,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import interfaces.Fabrica;
-import interfaces.IControladorInsEdicionCurso;
+
+import publicadores.ControladorInsEdicionCursoPublish;
+import publicadores.ControladorInsEdicionCursoPublishService;
+import publicadores.ControladorInsEdicionCursoPublishServiceLocator;
 
 /**
  * Servlet implementation class InscripcionEdicionCurso1
@@ -47,47 +49,95 @@ public class InscripcionEdicionCurso1 extends HttpServlet {
 		String ListCatIns= request.getParameter("ListCatIns");
 		String CatInsLabel=request.getParameter("CatInsLabel");
 		
-		Fabrica fabrica = Fabrica.getInstancia();
-		IControladorInsEdicionCurso iciec = fabrica.getIControladorInsEdicionCurso();
+		
 		HttpSession sesion = request.getSession();
 		
-		if (CatInsLabel.equals("Instituto"))
-			
-		{
-			
-			List<String> curso = new ArrayList<>();
-			iciec.ingresarInstituto(ListCatIns);
-			curso=iciec.listarCursos();
-			request.setAttribute("listaCursos", curso);
-			rd= request.getRequestDispatcher("InscripcionEdicionCurso2.jsp");
-			
-			request.setAttribute("label curso o instituto", CatInsLabel);
-			rd= request.getRequestDispatcher("InscripcionEdicionCurso2.jsp");
-
-			
-			request.setAttribute("nombre instituto o categoria", ListCatIns);
-			rd= request.getRequestDispatcher("InscripcionEdicionCurso2.jsp");
-			rd.forward(request, response);
-			
-		}
 		
-		if (CatInsLabel.equals("Categoría"))
-		{
+		
+		
+		
+			try {
+				if (CatInsLabel.equals("Instituto"))
+					
+				{
+					
+					String[] curso=null;
+				ingresarInstituto(ListCatIns);
+				curso=listarCursos();
+				
+
+				 if (curso.length==0)
+				 	{
+					request.setAttribute("mensaje", "No existen cursos disponibles");
+					rd= request.getRequestDispatcher("/notificacion.jsp");
+					rd.forward(request, response);
+					}
+					else {
+						request.setAttribute("listaCursos", curso);
+						request.setAttribute("label curso o instituto", CatInsLabel);
+						request.setAttribute("nombre instituto o categoria", ListCatIns);
+						rd= request.getRequestDispatcher("InscripcionEdicionCurso2.jsp");
+						rd.forward(request, response);
+					}
+				
+			}
 			
-			List<String> curso = new ArrayList<>();
-			iciec.ingresarCategoria(ListCatIns);
-			curso=iciec.listarCursosCategoria();
-			request.setAttribute("listaCursos", curso);
-			rd= request.getRequestDispatcher("InscripcionEdicionCurso2.jsp");
+			if (CatInsLabel.equals("Categoría"))
+			{
+				
+				String[] curso1=null;
+				ingresarCategoria(ListCatIns);
+				curso1=listarCursosCategoria();
+				
+				 if (curso1.length==0)
+					{
+				 
+				   
+					request.setAttribute("mensaje", "No existen cursos disponibles");
+					rd= request.getRequestDispatcher("/notificacion.jsp");
+					rd.forward(request, response);
+					}
+			 else 
+			 	{
+				 
+				 request.setAttribute("listaCursos", curso1);
+				 request.setAttribute("label curso o instituto", CatInsLabel);
+			     request.setAttribute("nombre instituto o categoria", ListCatIns);
+				 rd= request.getRequestDispatcher("InscripcionEdicionCurso2.jsp");
+				 rd.forward(request, response);
+			 }
+				
+			}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
-			request.setAttribute("label curso o instituto", CatInsLabel);
-			rd= request.getRequestDispatcher("InscripcionEdicionCurso2.jsp");
-			
-			request.setAttribute("nombre instituto o categoria", ListCatIns);
-			rd= request.getRequestDispatcher("InscripcionEdicionCurso2.jsp");
-			rd.forward(request, response);
-			
-		}
 	}
 
+	
+	
+	public void ingresarInstituto(String ListCatIns) throws Exception {
+		ControladorInsEdicionCursoPublishService ciecp = new ControladorInsEdicionCursoPublishServiceLocator();
+		ControladorInsEdicionCursoPublish port= ciecp.getControladorInsEdicionCursoPublishPort();
+		port.ingresarInstituto(ListCatIns);
+	}
+	
+	public String[] listarCursos() throws Exception {
+		ControladorInsEdicionCursoPublishService ciecp = new ControladorInsEdicionCursoPublishServiceLocator();
+		ControladorInsEdicionCursoPublish port= ciecp.getControladorInsEdicionCursoPublishPort();
+		return port.listarCursos();
+	}
+	
+	public void ingresarCategoria(String ListCatIns) throws Exception {
+		ControladorInsEdicionCursoPublishService ciecp = new ControladorInsEdicionCursoPublishServiceLocator();
+		ControladorInsEdicionCursoPublish port= ciecp.getControladorInsEdicionCursoPublishPort();
+		port.ingresarCategoria(ListCatIns);
+	}
+	
+	public String[] listarCursosCategoria() throws Exception {
+		ControladorInsEdicionCursoPublishService ciecp = new ControladorInsEdicionCursoPublishServiceLocator();
+		ControladorInsEdicionCursoPublish port= ciecp.getControladorInsEdicionCursoPublishPort();
+		return port.listarCursosCategoria();
+	}
 }

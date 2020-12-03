@@ -10,8 +10,8 @@
 </head>
 <%@include file="/header.jsp" %>
 <%
-List <String> listaCurso = new ArrayList<>();
-listaCurso = (List<String>)request.getAttribute("listaCursos");
+String[] listaCurso;
+listaCurso = (String[])request.getAttribute("listaCursos");
 String nomIns =(String)request.getAttribute("instituto");
 
 %>

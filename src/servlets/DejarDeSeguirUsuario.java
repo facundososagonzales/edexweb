@@ -10,10 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import excepciones.UsuarioNoExisteException;
-import interfaces.Fabrica;
-import interfaces.IControladorDejarDeSeguir;
-import interfaces.IControladorSeguirUsuario;
+import publicadores.ControladorDejarDeSeguir;
+import publicadores.ControladorDejarDeSeguirService;
+import publicadores.ControladorDejarDeSeguirServiceLocator;
 
 /**
  * Servlet implementation class DejarDeSeguirUsuario
@@ -45,20 +44,36 @@ public class DejarDeSeguirUsuario extends HttpServlet {
 		RequestDispatcher rd;
 		String nick = request.getParameter("seguidos");
 		
-		Fabrica fabrica = Fabrica.getInstancia();
-		IControladorDejarDeSeguir icdds = fabrica.getIControladorDejarDeSeguir();
+		//Fabrica fabrica = Fabrica.getInstancia();
+		//IControladorDejarDeSeguir icdds = fabrica.getIControladorDejarDeSeguir();
+		HttpSession session = request.getSession();
+		String logNick = (String)session.getAttribute("usuarioLogueado");
 		try {
-			icdds.ingresarUser(nick);
-			HttpSession session = request.getSession();
-			String logNick = (String)session.getAttribute("usuarioLogueado");
-			icdds.dejarDeSeguir(logNick);
-		}catch(UsuarioNoExisteException ex) {
-            throw new ServletException(ex.getMessage());
+			boolean userLog = ingresarUser(nick);
+			if(userLog) {
+				dejarDeSeguir(logNick);
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
 		}
 		
-		request.setAttribute("Mensaje","ha dejado de seguir a "+nick);
+		request.setAttribute("mensaje","ha dejado de seguir a "+nick);
 		rd = request.getRequestDispatcher("/notificacion.jsp");
 		rd.forward(request, response);
 	}
+	
+	public boolean ingresarUser(String nick) throws Exception {
+		ControladorDejarDeSeguirService sus = new ControladorDejarDeSeguirServiceLocator();
+		ControladorDejarDeSeguir port = sus.getControladorDejarDeSeguirPort();
+		return port.ingresarUser(nick);
+	}
+	
+	public void dejarDeSeguir(String nickLogueado) throws Exception {
+		ControladorDejarDeSeguirService sus = new ControladorDejarDeSeguirServiceLocator();
+		ControladorDejarDeSeguir port = sus.getControladorDejarDeSeguirPort();
+		port.dejarDeSeguir(nickLogueado);
+	}
+	
+	
 
 }

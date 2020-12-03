@@ -2,7 +2,7 @@
     pageEncoding="ISO-8859-1"%>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
-<%@ page import="datatypes.DtEdicionDetalle" %>
+<%@ page import="publicadores.DtEdicionDetalle" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -11,9 +11,9 @@
 <%@include file="/header.jsp" %>
 </head>
 <%
-List <String> listaDocentes = new ArrayList<>();
-listaDocentes = (List<String>)request.getAttribute("DocentesEdicionSeleccionada");
-DtEdicionDetalle dtEdicion = (DtEdicionDetalle)request.getAttribute("DatosEdicionSeleccionada");
+//String[] listaDocentes;
+//listaDocentes = (String[])request.getAttribute("DocentesEdicionSeleccionada");
+String dtEdicion = (String)request.getAttribute("DatosEdicionSeleccionada");
 
 %>
 <body>
@@ -22,7 +22,7 @@ DtEdicionDetalle dtEdicion = (DtEdicionDetalle)request.getAttribute("DatosEdicio
 		  	 <div class="input-group-prepend">
 		        <span class="input-group-text">Información de edición de curso</span>
 		     </div>
-		     <textarea class="form-control" aria-label="With textarea" style="height : 175px; width : 194px;" readonly><%=dtEdicion.toString()+"Docente:"+listaDocentes%></textarea>	
+		     <textarea class="form-control" aria-label="With textarea" style="height : 175px; width : 194px;" readonly><%=dtEdicion%></textarea>	
 	     </div>
 
 </body>

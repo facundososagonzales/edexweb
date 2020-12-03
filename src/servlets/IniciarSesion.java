@@ -10,8 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import interfaces.Fabrica;
-import interfaces.IControladorInicioDeSesion;
+import publicadores.ControladorIniciarSesion;
+import publicadores.ControladorIniciarSesionService;
+import publicadores.ControladorIniciarSesionServiceLocator;
 
 /**
  * Servlet implementation class IniciarSesion
@@ -44,30 +45,65 @@ public class IniciarSesion extends HttpServlet {
 		RequestDispatcher rd;
 		String nick= request.getParameter("nick");
 		String pwd= request.getParameter("pwd");
+	
+		//Fabrica fabrica = Fabrica.getInstancia();
+		//IControladorInicioDeSesion icis = fabrica.getIControladorIniciodeSesion();
 		
-		Fabrica fabrica = Fabrica.getInstancia();
-		IControladorInicioDeSesion icis = fabrica.getIControladorIniciodeSesion();
-		boolean logueadook=icis.ingresarUsuario(nick, pwd);
-		String tipo = icis.tipoUsuario(nick);
 		
-		if(tipo.equals("Docente"))
-			tipo="docente";
-		else if(tipo.equals("Estudiante"))
-			tipo="estudiante";
+		try {
+			boolean logueadook = ingresarUsuario(nick, pwd);
 		
-		if (logueadook==true) {
-			HttpSession sesion = request.getSession();
-			sesion.setAttribute("tipoUsuarioLogueado", tipo);// si es docente o estudiante, que va a poder ver y dsp sesion.getattribute para llamarlo)*/
-			sesion.setAttribute("usuarioLogueado", nick);// en el servlet que cierre la sesion poner en null estos atributos.
-			//request.setAttribute("Mensaje", "Se ha logueado correctamente el usuario" + nick);
-			rd= request.getRequestDispatcher("/index.jsp");
-			rd.forward(request, response); 
+			String tipo = tipoUsuario(nick);
+		
+			
+			if(tipo.equals("Docente"))
+				tipo="docente";
+			else if(tipo.equals("Estudiante"))
+				tipo="estudiante";
+			
+			if (logueadook==true) {
+				HttpSession sesion = request.getSession();
+				sesion.setAttribute("tipoUsuarioLogueado", tipo);// si es docente o estudiante, que va a poder ver y dsp sesion.getattribute para llamarlo)*/
+				sesion.setAttribute("usuarioLogueado", nick);// en el servlet que cierre la sesion poner en null estos atributos.
+				//request.setAttribute("Mensaje", "Se ha logueado correctamente el usuario" + nick);
+				rd= request.getRequestDispatcher("/index.jsp");
+				rd.forward(request, response); 
+				}
+			else {
+					
+					request.setAttribute("mensaje", "Credenciales incorrectas");
+					rd= request.getRequestDispatcher("/notificacion.jsp");
+					rd.forward(request, response);
 			}
-		else {
-				
-				request.setAttribute("mensaje", "Credenciales incorrectas");
-				rd= request.getRequestDispatcher("/notificacion.jsp");
-				rd.forward(request, response);
+		
+		
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		
 	}
+		
+		
+	
+	public boolean ingresarUsuario(String usuario, String pwd) throws Exception {
+		ControladorIniciarSesionService cis = new ControladorIniciarSesionServiceLocator();
+		ControladorIniciarSesion port= cis.getControladorIniciarSesionPort();
+		return port.ingresarUsuario(usuario, pwd);
+		
+	
+	
+		
+		
+		
+		
+	}
+	public String tipoUsuario(String nick) throws Exception {
+		ControladorIniciarSesionService cis = new ControladorIniciarSesionServiceLocator();
+		ControladorIniciarSesion port= cis.getControladorIniciarSesionPort();
+	return port.tipoUsuario(nick);
+	
+		
+	
+}	
 }	

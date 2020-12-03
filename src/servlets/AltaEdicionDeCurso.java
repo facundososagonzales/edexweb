@@ -11,8 +11,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import interfaces.Fabrica;
-import interfaces.IControladorAltaEdicionCurso;
+import publicadores.ControladorAltaEdicionCurso;
+import publicadores.ControladorAltaEdicionCursoService;
+import publicadores.ControladorAltaEdicionCursoServiceLocator;
 
 /**
  * Servlet implementation class AltaEdicionDeCurso
@@ -47,14 +48,19 @@ public class AltaEdicionDeCurso extends HttpServlet {
 		String name =  request.getParameter("inputName");
 		String FechaInicio = request.getParameter("FechaInicio");
 		String FechaFin = request.getParameter("FechaFin");
-		Fabrica fabrica = Fabrica.getInstancia();
-		IControladorAltaEdicionCurso icaec = fabrica.getIControladorAltaEdicionCurso();
-		icaec.ingresarInstituto(instituto);
-		List<String> cursos = icaec.listarCursos();
+		//Fabrica fabrica = Fabrica.getInstancia();
+		//IControladorAltaEdicionCurso icaec = fabrica.getIControladorAltaEdicionCurso();
 		RequestDispatcher rd;
 		
+		try {
+			ingresarInstituto(instituto);
+			String[] cursos = listarCursos();
+			request.setAttribute("cursos", cursos);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
 		request.setAttribute("Instituto", instituto);
-		request.setAttribute("cursos", cursos);
 		request.setAttribute("name", name);
 		request.setAttribute("cupos", cupos);
 		request.setAttribute("fechaInicio", FechaInicio);
@@ -62,6 +68,18 @@ public class AltaEdicionDeCurso extends HttpServlet {
 		
 		rd= request.getRequestDispatcher("altaEdicionDeCurso1.jsp");
 		rd.forward(request, response);
+	}
+	
+	public void ingresarInstituto(String instituto) throws Exception {
+		ControladorAltaEdicionCursoService sus = new ControladorAltaEdicionCursoServiceLocator();
+		ControladorAltaEdicionCurso port = sus.getControladorAltaEdicionCursoPort();
+		port.ingresarInstituto(instituto);;
+	}
+	
+	public String[] listarCursos() throws Exception {
+		ControladorAltaEdicionCursoService sus = new ControladorAltaEdicionCursoServiceLocator();
+		ControladorAltaEdicionCurso port = sus.getControladorAltaEdicionCursoPort();
+		return port.listarCursos();
 	}
 
 }

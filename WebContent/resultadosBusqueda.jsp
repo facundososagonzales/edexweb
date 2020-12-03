@@ -1,6 +1,6 @@
 <%@page import="java.util.Date"%>
-<%@page import="datatypes.DtWebCurso"%>
-<%@page import="datatypes.DtWebProgF"%>
+<%@page import="publicadores.DtWebCurso"%>
+<%@page import="publicadores.DtWebProgF"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -89,15 +89,17 @@
 		
 		<%}
 			else if(mostrar.equals("todos")){
-			ArrayList<DtWebCurso> cursos = (ArrayList<DtWebCurso>) request.getAttribute("cursos");
-			ArrayList<DtWebProgF> programas = (ArrayList<DtWebProgF>) request.getAttribute("programas");
-	
+			ArrayList<publicadores.DtWebCurso> cursos = (ArrayList<publicadores.DtWebCurso>) request.getAttribute("cursos");
+			ArrayList<publicadores.DtWebProgF> programas = (ArrayList<publicadores.DtWebProgF>) request.getAttribute("programas");
 		%>
 	
-		<h1>Cursos, Programas del Sistema</h1>
 		
+		<h1>Cursos, Programas del Sistema</h1>
+		<form action="OrdenarAlfabeticamente" method="post">
+	 	<input type="hidden" name="mostrar" value="<%=mostrar%>">	
+		<input type="hidden" name="boton" id="boton" value="">
 		<table class="table table-bordered">
-		  <thead>
+		  <thead >
 		    <tr>
 		      <th scope="col">Nombre</th>
 		      <th scope="col">Fecha de Publicacion</th>
@@ -106,34 +108,54 @@
 		  
 		   <tbody>
 	  		<%
-					for (DtWebCurso dt : cursos) {
+					for (publicadores.DtWebCurso dt : cursos) {
 			%>
 	    	<tr>
 	      		<td><%=dt.getNombre()%></td>
-	      		<td><%=dt.getFechaPub()%></td>
+	      		<td><%=dt.getFechaPub().getTime()%></td>
 	    	</tr>
 	    	<% } %>
 	    	<%
-					for (DtWebProgF dt1 : programas) {
+					for (publicadores.DtWebProgF dt1 : programas) {
 			%>
 	    	<tr>
 	      		<td><%=dt1.getNombre()%></td>
-	      		<td><%=dt1.getFechaPub()%></td>
+	      		<td><%=dt1.getFechaPub().getTime()%></td>
 	    	</tr>
 	    	<% } %>
 	  	</tbody>
-	
-
-		<!-- Resultados SIMILARES -->
+	  	
+	  	
+	  	
+	  	<button type="button" class="btn btn-primary" onclick="procesar('ordenarAlfabeticamente')">Ordenar Alfabeticamente</button>
+	  	<button type="button" class="btn btn-primary" onclick="procesar('ordenarFecha')">Ordenar por Fecha</button>
+	  	<button type="button" class="btn btn-primary" onclick="procesar('ordenarCursos')">Ordenar por Curso</button>
+	  	<button type="button" class="btn btn-primary" onclick="procesar('ordenarProgramas')">Ordenar por Programas</button>
+	  	
+	  	<script type="text/javascript">
+		function procesar(tipo) {
+			document.getElementById("boton").value = tipo;
+			document.forms[1].submit();
+		}
+	</script>   
+ 
+	 
+	 </form> 	
 		
 		<%}
+			// <!-- Resultados SIMILARES -->
+			
 			else if(mostrar.equals("resultadosSimilares")){
-			ArrayList<DtWebCurso> cursosAux = (ArrayList<DtWebCurso>) request.getAttribute("cursosSimilares");
-			ArrayList<DtWebProgF> programasAux = (ArrayList<DtWebProgF>) request.getAttribute("programasSimilares");
+			ArrayList<publicadores.DtWebCurso> cursosAux = (ArrayList<publicadores.DtWebCurso>) request.getAttribute("cursosSimilares");
+			ArrayList<publicadores.DtWebProgF> programasAux = (ArrayList<publicadores.DtWebProgF>) request.getAttribute("programasSimilares");
 			String dato = (String) request.getAttribute("dato");
 		%>
 		
 		<h1>Resultados similares de la busqueda ... <%=dato%></h1>
+		<form action="OrdenarAlfabeticamente" method="post">
+	 	<input type="hidden" name="datoIngresado" value="<%=dato%>">
+		<input type="hidden" name="mostrar" value="<%=mostrar%>">
+		<input type="hidden" name="boton" id="boton" value="">
 		<table class="table table-bordered">
 		  <thead>
 		    <tr>
@@ -144,23 +166,38 @@
 		  
 		   <tbody>
 	  		<%
-					for (DtWebCurso dt : cursosAux) {
+					for (publicadores.DtWebCurso dt : cursosAux) {
 			%>
 	    	<tr>
 	      		<td><%=dt.getNombre()%></td>
-	      		<td><%=dt.getFechaPub()%></td>
+	      		<td><%=dt.getFechaPub().getTime()%></td>
 	    	</tr>
 	    	<% } %>
 	    	<%
-					for (DtWebProgF dt1 : programasAux) {
+					for (publicadores.DtWebProgF dt1 : programasAux) {
 			%>
 	    	<tr>
 	      		<td><%=dt1.getNombre()%></td>
-	      		<td><%=dt1.getFechaPub()%></td>
+	      		<td><%=dt1.getFechaPub().getTime()%></td>
 	    	</tr>
 	    	<% } %>
 	  	</tbody>
-	  		  
+	  	
+	  	
+	  	
+	  		
+	  	<button type="button" class="btn btn-primary" onclick="procesar('ordenarAlfabeticamente')">Ordenar Alfabeticamente</button>
+		<button type="button" class="btn btn-primary" onclick="procesar('ordenarFecha')">Ordenar por Fecha</button>
+		<button type="button" class="btn btn-primary" onclick="procesar('ordenarCursos')">Ordenar por Curso</button>
+	  	<button type="button" class="btn btn-primary" onclick="procesar('ordenarProgramas')">Ordenar por Programas</button>
+	  	<script type="text/javascript">
+		function procesar(tipo) {
+			document.getElementById("boton").value = tipo;
+			document.forms[1].submit();
+		}
+	</script>   
+
+	 	</form>	  
 		<%} %>		
 		
 		

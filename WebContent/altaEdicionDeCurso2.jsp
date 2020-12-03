@@ -4,8 +4,9 @@
 		<%@include file="/header.jsp" %>
 		<%@ page import="java.util.ArrayList" %>
 		<%@ page import="java.util.List" %>
-		<%@ page import="interfaces.Fabrica" %>
-		<%@ page import="interfaces.IControladorAltaEdicionCurso" %>
+		<%@page import="publicadores.ControladorAltaEdicionCurso"%>
+		<%@page import="publicadores.ControladorAltaEdicionCursoService"%>
+		<%@page import="publicadores.ControladorAltaEdicionCursoServiceLocator"%>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -22,10 +23,11 @@ String fechaFin = (String)request.getAttribute("fechaFin");
 String curso = (String)request.getAttribute("curso");
 
 
-Fabrica fabrica = Fabrica.getInstancia();
-IControladorAltaEdicionCurso icaec = fabrica.getIControladorAltaEdicionCurso();
-List<String> docentes = new ArrayList<>();
-docentes = icaec.listarDocentes();
+//Fabrica fabrica = Fabrica.getInstancia();
+//IControladorAltaEdicionCurso icaec = fabrica.getIControladorAltaEdicionCurso();
+ControladorAltaEdicionCursoService sus = new ControladorAltaEdicionCursoServiceLocator();
+ControladorAltaEdicionCurso port = sus.getControladorAltaEdicionCursoPort();
+String[] docentes = port.listarDocentes();
 
 %>
 

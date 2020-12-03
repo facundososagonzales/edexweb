@@ -8,17 +8,17 @@
 		<%@include file="/header.jsp" %>
 		<%@ page import="java.util.ArrayList" %>
 		<%@ page import="java.util.List" %>
-		<%@ page import="interfaces.Fabrica" %>
-		<%@ page import="interfaces.IControladorAltaEdicionCurso" %>
+		<%@page import="publicadores.ControladorAltaEdicionCurso"%>
+		<%@page import="publicadores.ControladorAltaEdicionCursoService"%>
+		<%@page import="publicadores.ControladorAltaEdicionCursoServiceLocator"%>
 		
 <%
 
-Fabrica fabrica = Fabrica.getInstancia();
-IControladorAltaEdicionCurso icaec = fabrica.getIControladorAltaEdicionCurso();
-List<String> institutos = new ArrayList<>();
-institutos = icaec.listarInstitutos();
-
-
+//Fabrica fabrica = Fabrica.getInstancia();
+//IControladorAltaEdicionCurso icaec = fabrica.getIControladorAltaEdicionCurso();
+ControladorAltaEdicionCursoService sus = new ControladorAltaEdicionCursoServiceLocator();
+ControladorAltaEdicionCurso port = sus.getControladorAltaEdicionCursoPort();
+String[] institutos = port.listarInstitutos();
 
 %>
 		

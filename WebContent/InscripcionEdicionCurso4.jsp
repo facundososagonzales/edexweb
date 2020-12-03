@@ -2,7 +2,6 @@
     pageEncoding="ISO-8859-1"%>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
-<%@ page import="datatypes.DtEdicionDetalle" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -11,7 +10,7 @@
 <%@include file="/header.jsp" %>
 </head>
 <% 
-	DtEdicionDetalle dtEdicion = (DtEdicionDetalle)request.getAttribute("DatosEdicionSeleccionada");
+String dtEdicion = (String)request.getAttribute("DatosEdicionSeleccionada");
 String edicion =(String)request.getAttribute("edicionSeleccionada");
 %>
 <body>
@@ -22,7 +21,7 @@ String edicion =(String)request.getAttribute("edicionSeleccionada");
 			  	 <div class="input-group-prepend">
 			        <span class="input-group-text">Información de edición de curso</span>
 			     </div>
-			     <textarea class="form-control" aria-label="With textarea" style="height : 175px; width : 194px;" readonly><%=dtEdicion.toString()%></textarea>	
+			     <textarea class="form-control" aria-label="With textarea" style="height : 175px; width : 194px;" readonly><%=dtEdicion%></textarea>	
 		</div>
 		<button type="button" class="btn btn-primary"
 			onclick="procesar('inscribir')">Inscribir</button>
@@ -32,7 +31,7 @@ String edicion =(String)request.getAttribute("edicionSeleccionada");
 	<script type="text/javascript">
 		function procesar(tipo) {
 			document.getElementById("boton").value = tipo;
-			document.forms[0].submit();
+			document.forms[1].submit();
 		}
 	</script>
 </body>

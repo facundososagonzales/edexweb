@@ -60,8 +60,8 @@ if(tipo.equals("visitante")){%>
 	   </div>
 
 	    <form action="BusquedaCursoProg" method="post" class="form-inline my-2 my-lg-0">
-      		<input class="form-control mr-sm-2" Name="CuadroBusqueda" type="search" placeholder="Curso, Programa" aria-label="Search">
-      		<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>
+      		<input class="form-control mr-sm-2" name="CuadroBusqueda" type="search" placeholder="Curso, Programa" aria-label="Search">
+      		<button class="btn btn-outline-success my-2 my-sm-0" type="submit" name="buscar">Buscar</button>
     	</form>
 	   
 	   <div class="collapse navbar-collapse flex-grow-0" id="navbarSupportedContent">  
@@ -140,6 +140,11 @@ if(tipo.equals("estudiante")){%>
 	      </ul>
 	      
 	    </div>
+	    
+   	    <form action="BusquedaCursoProg" method="post" class="form-inline my-2 my-lg-0">
+    		<input class="form-control mr-sm-2" name="CuadroBusqueda" type="search" placeholder="Curso, Programa" aria-label="Search">
+    		<button class="btn btn-outline-success my-2 my-sm-0" type="submit" name="buscar">Buscar</button>
+    		</form>
 	      
 	    <div class="collapse navbar-collapse flex-grow-0" id="navbarSupportedContent"> 
 	   
@@ -194,7 +199,7 @@ if(tipo.equals("docente")){%>
 	        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 	          <a class="dropdown-item" href="altaCurso.jsp">Alta Curso</a>
 	          <a class="dropdown-item" href="altaEdicionDeCurso.jsp">Alta de Edición de Curso</a>
-	          <a class="dropdown-item" href="#">Crear Programa formacion</a>
+	          <a class="dropdown-item" href="crearProgramaDeFormacion.jsp">Crear Programa formacion</a>
 	        </div>
 	      </li>
 	           <li class="nav-item dropdown">
@@ -218,7 +223,7 @@ if(tipo.equals("docente")){%>
 	        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 	          <a class="dropdown-item" href="seguirUsuario.jsp">Seguir a un usuario</a>
 			  <a class="dropdown-item" href="dejarDeSeguirUsuario.jsp">Dejar de seguir a un usuario</a>
-			  <a class="dropdown-item" href="#">Agregar Curso a programa formacion</a>
+			  <a class="dropdown-item" href="agregarCursoAProgDeFormacion.jsp">Agregar Curso a programa formacion</a>
 		      <a class="dropdown-item" href="SeleccionarEstudiantesEdicionCurso.jsp">Seleccionar estudiante para una edicion de curso</a>
 	          <a class="dropdown-item" href="modificarDatosUsuario.jsp">Modificar datos de usuario</a>
 	        </div>
@@ -226,6 +231,12 @@ if(tipo.equals("docente")){%>
 	      </ul>
 	      
 	    </div>
+	    
+	    	    
+   	    <form action="BusquedaCursoProg" method="post" class="form-inline my-2 my-lg-0">
+    		<input class="form-control mr-sm-2" name="CuadroBusqueda" type="search" placeholder="Curso, Programa" aria-label="Search">
+    		<button class="btn btn-outline-success my-2 my-sm-0" type="submit" name="buscar">Buscar</button>
+    		</form>
 	      
 	    <div class="collapse navbar-collapse flex-grow-0" id="navbarSupportedContent"> 
 	   

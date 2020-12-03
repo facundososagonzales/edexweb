@@ -12,8 +12,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import interfaces.Fabrica;
-import interfaces.IControladorConsultaEdicionCurso;
+//import interfaces.Fabrica;
+//import interfaces.IControladorConsultaEdicionCurso;
+import publicadores.ControladorConsultaEdicionCurso1Publish;
+import publicadores.ControladorConsultaEdicionCurso1PublishService;
+import publicadores.ControladorConsultaEdicionCurso1PublishServiceLocator;
+
 
 
 /**
@@ -49,44 +53,46 @@ public class ConsultaEdicionCurso1 extends HttpServlet {
 		String ListCatIns= request.getParameter("ListCatIns");
 		String CatInsLabel=request.getParameter("CatInsLabel");
 		
-		Fabrica fabrica = Fabrica.getInstancia();
-		IControladorConsultaEdicionCurso iccec = fabrica.getIControladorConsultaEdicionCurso();
+		//Fabrica fabrica = Fabrica.getInstancia();
+		//IControladorConsultaEdicionCurso iccec = fabrica.getIControladorConsultaEdicionCurso();
 		HttpSession sesion = request.getSession();
 		
 		
-		if (CatInsLabel.equals("Instituto"))
-			
-		{
-			
-			List<String> curso = null;
-			iccec.ingresarInstituto(ListCatIns);
-			curso=iccec.listarCurso();
-			
-			
-			 if (curso.isEmpty())
-			 	{
-				request.setAttribute("mensaje", "No existen cursos disponibles");
-				rd= request.getRequestDispatcher("/notificacion.jsp");
-				rd.forward(request, response);
+	
+			try {
+				
+				if (CatInsLabel.equals("Instituto"))
+					
+				{
+					
+					String[] curso = null;
+					ingresarInstituto(ListCatIns);
+					curso=listarCurso();
+					
+					
+					 if (curso.length==0)
+					 	{
+						request.setAttribute("mensaje", "No existen cursos disponibles");
+						rd= request.getRequestDispatcher("/notificacion.jsp");
+						rd.forward(request, response);
+						}
+						else {
+							request.setAttribute("listaCursos", curso);
+							request.setAttribute("label curso o instituto", CatInsLabel);
+							request.setAttribute("nombre instituto o categoria", ListCatIns);
+							rd= request.getRequestDispatcher("consultaEdicionCurso2.jsp");
+							rd.forward(request, response);
+						}
 				}
-				else {
-					request.setAttribute("listaCursos", curso);
-					request.setAttribute("label curso o instituto", CatInsLabel);
-					request.setAttribute("nombre instituto o categoria", ListCatIns);
-					rd= request.getRequestDispatcher("consultaEdicionCurso2.jsp");
-					rd.forward(request, response);
-				}
-		}
-		
-		if (CatInsLabel.equals("Categoría"))
-		{
-			
-			List<String> curso1 = null;
-			iccec.ingresarCategoria(ListCatIns);
-			curso1=iccec.listarCursoPorCategoria();
-		
-		
-			 if (curso1.isEmpty())
+				
+				if (CatInsLabel.equals("Categoría"))
+				{
+					
+					String[] curso1 = null;
+				ingresarCategoria(ListCatIns);
+				curso1=listarCursoPorCategoria();
+				
+				 if (curso1.length==0)
 					{
 				 
 				   
@@ -106,9 +112,41 @@ public class ConsultaEdicionCurso1 extends HttpServlet {
 			
 		}
 	
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		
+		
+			
 	
 		
 		
+	}
+	
+	public String[] listarCurso() throws Exception {
+		ControladorConsultaEdicionCurso1PublishService cecp1 = new ControladorConsultaEdicionCurso1PublishServiceLocator();
+		ControladorConsultaEdicionCurso1Publish port= cecp1.getControladorConsultaEdicionCurso1PublishPort();
+		return port.listarCurso();
+	}
+	
+	public String[] listarCursoPorCategoria() throws Exception {
+		ControladorConsultaEdicionCurso1PublishService cecp1 = new ControladorConsultaEdicionCurso1PublishServiceLocator();
+		ControladorConsultaEdicionCurso1Publish port= cecp1.getControladorConsultaEdicionCurso1PublishPort();
+		return port.listarCursoPorCategoria();
+	}
+	
+	public void ingresarInstituto(String nomCategoria) throws Exception {
+		ControladorConsultaEdicionCurso1PublishService cecp1 = new ControladorConsultaEdicionCurso1PublishServiceLocator();
+		ControladorConsultaEdicionCurso1Publish port= cecp1.getControladorConsultaEdicionCurso1PublishPort();
+		port.ingresarInstituto(nomCategoria);
+	}
+	
+	public void ingresarCategoria(String nomCategoria) throws Exception {
+		ControladorConsultaEdicionCurso1PublishService cecp1 = new ControladorConsultaEdicionCurso1PublishServiceLocator();
+		ControladorConsultaEdicionCurso1Publish port= cecp1.getControladorConsultaEdicionCurso1PublishPort();
+		port.ingresarCategoria(nomCategoria);
 	}
 }
 	

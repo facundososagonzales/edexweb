@@ -1,7 +1,11 @@
 package servlets;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.servlet.RequestDispatcher;
@@ -10,11 +14,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import datatypes.DtWebCurso;
-import datatypes.DtWebProgF;
-import interfaces.Fabrica;
-import interfaces.IControladorListaCursoPrograma;
+import publicadores.DtWebCurso;
+import publicadores.DtWebProgF;
+import publicadores.ControladorListaCursoProgramaPublish;
+import publicadores.ControladorListaCursoProgramaPublishService;
+import publicadores.ControladorListaCursoProgramaPublishServiceLocator;
 
 /**
  * Servlet implementation class BusquedaCursoProg
@@ -45,12 +49,26 @@ public class BusquedaCursoProg extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		RequestDispatcher rd;
-		Fabrica f = Fabrica.getInstancia();
-		IControladorListaCursoPrograma icon = f.getIControladorListaCursoPrograma();
-		ArrayList<DtWebCurso> listaCursos = icon.listarCursos();
-		ArrayList<DtWebProgF> listaProgramas = icon.listarProgramas();
-		ArrayList<DtWebCurso> listaCursosAux = new ArrayList<>();
-		ArrayList<DtWebProgF> listaProgramasAux = new ArrayList<>();
+		/*Fabrica f = Fabrica.getInstancia();
+		IControladorListaCursoPrograma icon = f.getIControladorListaCursoPrograma();*/
+		
+		ArrayList<publicadores.DtWebCurso> listaCursos=null;
+		try {
+			listaCursos = listarCursos();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		ArrayList<publicadores.DtWebProgF> listaProgramas=null;
+		try {
+			listaProgramas = listarProgramas();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		ArrayList<publicadores.DtWebCurso> listaCursosAux = new ArrayList<>();
+		ArrayList<publicadores.DtWebProgF> listaProgramasAux = new ArrayList<>();
 		
 		String dato = request.getParameter("CuadroBusqueda");
 		int i =0;
@@ -62,11 +80,23 @@ public class BusquedaCursoProg extends HttpServlet {
 		Date fechaC = null;
 		Date fechaP=null;
 		
-		for(DtWebCurso d: listaCursos) {
+		for(publicadores.DtWebCurso d: listaCursos) {
 			if(d.getNombre().equals(dato)) {
 				 i = 1;
 				 nombreC = d.getNombre();
-				 fechaC =d.getFechaPub();
+				 fechaC = d.getFechaPub().getTime();
+				 System.out.println("\n\n"+fechaC);
+				 /* DateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+				 try {
+					fechaC = (Date)formatter.parse(d.getFechaPub().toString());
+					
+					DateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+  					date = (Date)formatter.parse(date.toString());
+  					
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}*/
 			}
 		}
 		
@@ -74,7 +104,15 @@ public class BusquedaCursoProg extends HttpServlet {
 			if(dt.getNombre().equals(dato)) {
 				 x = 1;
 				 nombreP = dt.getNombre();
-				 fechaP =dt.getFechaPub();
+				 fechaP = dt.getFechaPub().getTime();
+				 /*DateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+				 
+				 try {
+					 fechaP = (Date)formatter.parse(dt.getFechaPub().toString());
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}*/
 			}
 		}
 		
@@ -142,11 +180,30 @@ public class BusquedaCursoProg extends HttpServlet {
 			request.setAttribute("mensaje", "No se han encontrado Resultados");
 			rd = request.getRequestDispatcher("/notificacion.jsp");
 			rd.forward(request, response);
-		}
-		
-		
-		
+		}	
 		
 	}
+	
+	 public ArrayList<publicadores.DtWebCurso> listarCursos() throws Exception {
+		ControladorListaCursoProgramaPublishService cps = new ControladorListaCursoProgramaPublishServiceLocator();
+		ControladorListaCursoProgramaPublish port = cps.getControladorListaCursoProgramaPublishPort();
+		publicadores.DtWebCurso[] cursos = port.listarCursos();
+		ArrayList<publicadores.DtWebCurso> lstCursos = new ArrayList<>();
+		for (int i = 0; i < cursos.length; ++i) {
+			lstCursos.add(cursos[i]);
+		}
+		return lstCursos;
+	}
+	
+	 public ArrayList<publicadores.DtWebProgF> listarProgramas() throws Exception {
+			ControladorListaCursoProgramaPublishService cps = new ControladorListaCursoProgramaPublishServiceLocator();
+			ControladorListaCursoProgramaPublish port = cps.getControladorListaCursoProgramaPublishPort();
+			publicadores.DtWebProgF[] programas = port.listarProgramas();
+			ArrayList<publicadores.DtWebProgF> lstProgramas = new ArrayList<>();
+			for (int i = 0; i < programas.length; ++i) {
+				lstProgramas.add(programas[i]);
+			}
+			return lstProgramas;
+		}
 
 }

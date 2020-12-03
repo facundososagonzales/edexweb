@@ -13,8 +13,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import interfaces.Fabrica;
-import interfaces.IControladorListarAceptadosEdiCurso;
+import publicadores.ControladorListarAceptadosEdiCurso;
+import publicadores.ControladorListarAceptadosEdiCursoService;
+import publicadores.ControladorListarAceptadosEdiCursoServiceLocator;
 
 /**
  * Servlet implementation class ListarAceptadosEdiCurso
@@ -46,20 +47,36 @@ public class ListarAceptadosEdiCurso extends HttpServlet {
 		RequestDispatcher rd;
 		String ListIns= request.getParameter("ListIns");
 		request.setAttribute("instituto", ListIns);
-		rd= request.getRequestDispatcher("SeleccionarEstudiantesEdicionCurso1.jsp");
-		Fabrica fabrica = Fabrica.getInstancia();
-		IControladorListarAceptadosEdiCurso icseec = fabrica.getIControladorListarAceptadosEdiCurso();
-		HttpSession sesion = request.getSession();
+		rd= request.getRequestDispatcher("ListarAceptadosEdiCurso1.jsp");
+		
 			
-		List<String> curso = new ArrayList<>();
-		icseec.ingresarInstituto(ListIns);
-		curso=icseec.listarCursos();
+		String[] curso;
+		
+		try {
+			
+		ingresarInstituto(ListIns);
+	
+		curso=listarCursos();
 		request.setAttribute("listaCursos", curso);
 		rd= request.getRequestDispatcher("listarAceptadosEdiCurso1.jsp");
-		
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		rd.forward(request, response);
 	}
 	
+	public void ingresarInstituto (String curso) throws Exception {
+		ControladorListarAceptadosEdiCursoService cps = new ControladorListarAceptadosEdiCursoServiceLocator();
+		ControladorListarAceptadosEdiCurso port = cps.getControladorListarAceptadosEdiCursoPort();
+		port.ingresarInstituto(curso);	
+	}
+	
+	public String[] listarCursos() throws Exception {
+		ControladorListarAceptadosEdiCursoService cps = new ControladorListarAceptadosEdiCursoServiceLocator();
+		ControladorListarAceptadosEdiCurso port = cps.getControladorListarAceptadosEdiCursoPort();
+		return port.listarCursos();	
+	}
 
 }

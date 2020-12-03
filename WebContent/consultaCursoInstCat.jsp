@@ -29,7 +29,7 @@
 	<script type="text/javascript">
 		function procesar(tipo) {
 			document.getElementById("boton").value = tipo;
-			document.forms[0].submit();
+			document.forms[1].submit();
 		}
 	</script>
 

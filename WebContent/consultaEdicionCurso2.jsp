@@ -12,8 +12,8 @@
 </head>
 
 <%
-List <String> listaCurso = new ArrayList<>();
-listaCurso = (List<String>)request.getAttribute("listaCursos");
+String[] listaCurso;
+listaCurso = (String[])request.getAttribute("listaCursos");
 String catIns =(String)request.getAttribute("label curso o instituto");
 String nomCatIns =(String)request.getAttribute("nombre instituto o categoria");
 

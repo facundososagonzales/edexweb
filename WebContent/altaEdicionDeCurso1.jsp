@@ -12,8 +12,7 @@
 
 <%
 
-List <String> cursos = new ArrayList<>();
-cursos = (List<String>)request.getAttribute("cursos");
+String[] cursos =(String[])request.getAttribute("cursos");
 
 
 String instituto = (String)request.getAttribute("Instituto");

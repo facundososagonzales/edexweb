@@ -12,8 +12,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import interfaces.Fabrica;
-import interfaces.IControladorConsultaEdicionCurso;
+//import interfaces.Fabrica;
+//import interfaces.IControladorConsultaEdicionCurso;
+import publicadores.ControladorConsultaEdicionCursoPublish;
+import publicadores.ControladorConsultaEdicionCursoPublishService;
+import publicadores.ControladorConsultaEdicionCursoPublishServiceLocator;
+
 
 
 /**
@@ -49,52 +53,79 @@ public class ConsultaEdicionCurso extends HttpServlet {
 		String catIns= request.getParameter("catIns");
 		request.setAttribute("categoria o instituto", catIns);
 		rd= request.getRequestDispatcher("consultaEdicionCurso1.jsp");
-		Fabrica fabrica = Fabrica.getInstancia();
-		IControladorConsultaEdicionCurso iccec = fabrica.getIControladorConsultaEdicionCurso();
+		//Fabrica fabrica = Fabrica.getInstancia();
+		//IControladorConsultaEdicionCurso iccec = fabrica.getIControladorConsultaEdicionCurso();
 		HttpSession sesion = request.getSession();
 		
+		
+		try {
 		if (catIns.equals("Instituto"))
 			
 		{
 			
-			List<String> instituto = new ArrayList<>();
-			instituto=iccec.listarInstituto();
+			String[] instituto ;
 			
-			if (instituto==null)
-			{
-				request.setAttribute("mensaje", "No existen institutos disponibles");
-				rd= request.getRequestDispatcher("/notificacion.jsp");
+				instituto=listarInstituto();
+				
+				if (instituto==null)
+				{
+					request.setAttribute("mensaje", "No existen institutos disponibles");
+					rd= request.getRequestDispatcher("/notificacion.jsp");
+					rd.forward(request, response);
+				}
+				else 
+				{
+				request.setAttribute("lista", instituto);
+				rd= request.getRequestDispatcher("consultaEdicionCurso1.jsp");
 				rd.forward(request, response);
 			}
-			else 
+			}
+			
+			if (catIns.equals("Categoría"))
 			{
-			request.setAttribute("lista", instituto);
-			rd= request.getRequestDispatcher("consultaEdicionCurso1.jsp");
-			rd.forward(request, response);
-		}
-		}
+				
+				String[] categoria;
+				categoria=listarCategoria();
+				
+				if (categoria==null)
+				{
+					request.setAttribute("mensaje", "No existen categorías disponibles");
+					rd= request.getRequestDispatcher("/notificacion.jsp");
+					rd.forward(request, response);
+				}
+				else 
+				{
+				request.setAttribute("lista", categoria);
+				rd= request.getRequestDispatcher("consultaEdicionCurso1.jsp");
+				rd.forward(request, response);
+				}
+			}
+			} 
 		
-		if (catIns.equals("Categoría"))
-		{
-			
-			List<String> categoria = new ArrayList<>();
-			categoria=iccec.listarCategoria();
-			
-			if (categoria==null)
-			{
-				request.setAttribute("mensaje", "No existen categorías disponibles");
-				rd= request.getRequestDispatcher("/notificacion.jsp");
-				rd.forward(request, response);
+		catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			else 
-			{
-			request.setAttribute("lista", categoria);
-			rd= request.getRequestDispatcher("consultaEdicionCurso1.jsp");
-			rd.forward(request, response);
-			}
-		}
+			
+		
 		
 		
 	}
+	
+	
+	public String[] listarInstituto() throws Exception {
+		ControladorConsultaEdicionCursoPublishService cecp = new ControladorConsultaEdicionCursoPublishServiceLocator();
+		ControladorConsultaEdicionCursoPublish port= cecp.getControladorConsultaEdicionCursoPublishPort();
+		return port.listarInstituto();
+	}
+		
+	
+	
+		public String[] listarCategoria() throws Exception {
+			ControladorConsultaEdicionCursoPublishService cecp = new ControladorConsultaEdicionCursoPublishServiceLocator();
+			ControladorConsultaEdicionCursoPublish port= cecp.getControladorConsultaEdicionCursoPublishPort();
+			return port.listarCategoria();
+		}
+	
 
 }

@@ -1,6 +1,7 @@
 package servlets;
 
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
@@ -9,14 +10,13 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.rpc.ServiceException;
 
-import datatypes.DtCursoBase;
-import datatypes.DtInfoProgCurso;
-import excepciones.ExisteCursoException;
-import excepciones.ExisteInstitutoException;
-import excepciones.ListaDeCursosVaciaException;
-import interfaces.Fabrica;
-import interfaces.IControladorConsultaDeCurso;
+import publicadores.ControladorConsultaDeCursoPublish;
+import publicadores.ControladorConsultaDeCursoPublishService;
+import publicadores.ControladorConsultaDeCursoPublishServiceLocator;
+import publicadores.DtCursoBase;
+import publicadores.DtInfoProgCurso;
 
 /**
  * Servlet implementation class InformacionCurso
@@ -48,34 +48,86 @@ public class InformacionCurso extends HttpServlet {
 		// TODO Auto-generated method stub
 		// Solo para Instituto
 		RequestDispatcher rd;
-		Fabrica fab = Fabrica.getInstancia();
-		IControladorConsultaDeCurso icon = fab.getIControladorConsultaDeCurso();
+		
 		String nomCurso = request.getParameter("NomCur");
 		String nomInstituto = request.getParameter("NomInstituto");
-		
+		ArrayList<publicadores.DtCursoBase> cursos = null;
+		System.out.println(nomCurso+"\n\n");
+		System.out.println(nomInstituto+"\n\n");
 		try {
-			ArrayList<DtCursoBase> cursos = icon.ingresarInstituto(nomInstituto);
-		}catch(ExisteInstitutoException e) {
-			throw new ServletException(e.getMessage());
-		}catch(ListaDeCursosVaciaException e1) {
-			throw new ServletException(e1.getMessage());
+			cursos = ingresarInstituto(nomInstituto);
+			System.out.println("PRIMER TRYYY");
+		}catch (RemoteException | ServiceException e) {
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
+			request.setAttribute("mensaje","Instituto no existe/ No se encontraron Cursos asociados al Instituto");
+			rd = request.getRequestDispatcher("/notificacion.jsp");
+			rd.forward(request, response);
 		}
 		
+		System.out.println("\n\n *********************** \n\n");
+		DtInfoProgCurso dt=null;
 		try {
-			DtInfoProgCurso dt = icon.seleccionarCurso(nomCurso);
-			request.setAttribute("Curso", dt);
-			//request.setAttribute("mostrar", "curso");
+			dt = seleccionarCurso(nomCurso);
+			int i = 0;
+			for(publicadores.DtCursoBase dta: cursos) {
+				if(dta.getNombre().equals(nomCurso)) {
+					i=1;
+				}
+			}
 			
-		}catch(ExisteCursoException e) {
-			throw new ServletException(e.getMessage());
-			
+			if(i==0) {
+				request.setAttribute("mensaje","El Curso de nombre"+nomCurso+" no Existe");
+				rd = request.getRequestDispatcher("/notificacion.jsp");
+				rd.forward(request, response);
+			}
+		} catch (RemoteException | ServiceException e) {
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
+			request.setAttribute("mensaje","El Curso de nombre"+nomCurso+" no Existe");
+			rd = request.getRequestDispatcher("/notificacion.jsp");
+			rd.forward(request, response);
 		}
+		request.setAttribute("Curso", dt);
+		//request.setAttribute("mostrar", "curso");
+		
+		
 		
 		request.setAttribute("Dato", nomInstituto);
 		request.setAttribute("NomCurso", nomCurso);
 		rd = request.getRequestDispatcher("/datosCurso.jsp");
 		rd.forward(request, response);
 	
+	}
+	
+public ArrayList<publicadores.DtCursoBase> ingresarInstituto(String dato) throws ServiceException, RemoteException{
+		
+		ControladorConsultaDeCursoPublishService cps = new ControladorConsultaDeCursoPublishServiceLocator();
+		ControladorConsultaDeCursoPublish port = cps.getControladorConsultaDeCursoPublishPort();
+		publicadores.DtCursoBase[] cursosAux = port.ingresarInstituto(dato);
+		
+		ArrayList<publicadores.DtCursoBase> ret = new ArrayList<>();
+		for (int i = 0; i < cursosAux.length; ++i) {
+			ret.add(cursosAux[i]);
+		}
+		
+		if(ret.isEmpty()) {
+			throw new RemoteException();
+		}
+		
+		return ret;
+	}
+	
+	public publicadores.DtInfoProgCurso seleccionarCurso(String nomCurso) throws ServiceException, RemoteException{
+		ControladorConsultaDeCursoPublishService cps = new ControladorConsultaDeCursoPublishServiceLocator();
+		ControladorConsultaDeCursoPublish port = cps.getControladorConsultaDeCursoPublishPort();
+		publicadores.DtInfoProgCurso ret = null;
+		ret = port.seleccionarCurso(nomCurso);
+		if(ret.equals(null)) {
+			throw new RemoteException();
+		}
+		
+		return ret;
 	}
 
 }

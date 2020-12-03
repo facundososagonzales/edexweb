@@ -9,18 +9,15 @@
 <%@include file="/header.jsp" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
-<%@ page import="datatypes.DtEstudiante" %>
+<%@ page import="publicadores.DtEstudiante" %>
 <% 
 
 String edicion =(String)request.getAttribute("edicion");
 String nomIns = (String)request.getAttribute("nomIns");
 String curso = (String)request.getAttribute("curso");
-ArrayList<DtEstudiante> estudiantes = (ArrayList<DtEstudiante>) request.getAttribute("DatosEstudiantes");
-List<String> listaEst = (List<String>)request.getAttribute("estudiantes");
-for (DtEstudiante dte : estudiantes) {
-	System.out.println(dte.getNick() + " nick");
-}
-
+DtEstudiante[] estudiantes = (DtEstudiante[]) request.getAttribute("DatosEstudiantes");
+String[] listaEst = (String[])request.getAttribute("estudiantes");
+String mostrar = (String)request.getAttribute("mostrar");
 	
 %>
 
@@ -33,29 +30,15 @@ for (DtEstudiante dte : estudiantes) {
 	<input type="hidden" name="curso" value="<%=curso %>">
 	
 	<h1>Estudiantes inscriptos en la edicion <%=edicion%></h1>
-	<table class="table table-striped">
-		<thead>
-			<tr>
-				<th scope="col">#</th>
-				<th scope="col">Nick</th>
-				<th scope="col">Estado</th>
-			</tr>
-		</thead>
-		<tbody>
-			<%
-				int i = 1;
-					for (DtEstudiante dte : estudiantes) {
-			%>
-			<tr>
-				<th scope="row"><%=i%></th>
-				<td><%=dte.getNick()%></td>
-				<td><%=dte.getEstado()%></td>
-			</tr>
-			<%
-				}
-			%>
-		</tbody>
-	</table>
+	
+	<div class="input-group">
+			  	 <div class="input-group-prepend">
+			        <span class="input-group-text">Nombre y estado de los estudiantes</span>
+			     </div>
+			     <textarea class="form-control" aria-label="With textarea" style="height : 175px; width : 194px;" readonly><%=mostrar%></textarea>	
+		</div>
+		
+	
 	
 	<label for="inputRol">Seleccionar estudiante:</label>
 			<select id="ListEst" name="ListEst" class="form-control" >

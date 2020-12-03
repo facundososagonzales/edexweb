@@ -12,8 +12,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import interfaces.Fabrica;
-import interfaces.IControladorConsultaEdicionCurso;
+import publicadores.ControladorConsultaEdicionCurso2Publish;
+import publicadores.ControladorConsultaEdicionCurso2PublishService;
+import publicadores.ControladorConsultaEdicionCurso2PublishServiceLocator;
+
+//import interfaces.Fabrica;
+//import interfaces.IControladorConsultaEdicionCurso;
 
 
 /**
@@ -51,55 +55,104 @@ public class ConsultaEdicionCurso2 extends HttpServlet {
 		System.out.println(CatInsLabel);
 		String nomCatIns=request.getParameter("nomCatIns");
 		
-		Fabrica fabrica = Fabrica.getInstancia();
-		IControladorConsultaEdicionCurso iccec = fabrica.getIControladorConsultaEdicionCurso();
+		
 		HttpSession sesion = request.getSession();
 		
 		
-	if (CatInsLabel.equals("Instituto"))
-			
-		{
-			
-			List<String> edicion = new ArrayList<>();
-			iccec.ingresarInstituto(nomCatIns);
-			iccec.ingresarCurso(Curso);
-			edicion=iccec.listarEdicion();
-			
-			 if (edicion.isEmpty())
+	
+			try {
+				if (CatInsLabel.equals("Instituto"))
+					
+				{
+					
+					String[] edicion;
+				ingresarInstituto(nomCatIns);
+				ingresarCurso(Curso);
+				edicion=listarEdicion();
+				
+				 if (edicion.length==0)
+				 	{
+					request.setAttribute("mensaje", "No existen ediciones disponibles");
+					rd= request.getRequestDispatcher("/notificacion.jsp");
+					rd.forward(request, response);
+					}
+					
+					else {	
+							request.setAttribute("listaEdicion", edicion);
+							rd= request.getRequestDispatcher("consultaEdicionCurso3.jsp");
+							rd.forward(request, response);
+					}
+			}
+		if (CatInsLabel.equals("Categoría")) 
+			{
+
+				String[] edicion;
+				ingresarCategoria(nomCatIns);
+				ingresarCursoPorCat(Curso);
+				edicion=listarEdicionporCat();
+				
+				if (edicion.length==0)
 			 	{
 				request.setAttribute("mensaje", "No existen ediciones disponibles");
 				rd= request.getRequestDispatcher("/notificacion.jsp");
 				rd.forward(request, response);
-				}
-				
-				else {	
-						request.setAttribute("listaEdicion", edicion);
-						rd= request.getRequestDispatcher("consultaEdicionCurso3.jsp");
-						rd.forward(request, response);
-				}
-		}
-	if (CatInsLabel.equals("Categoría")) 
-		{
-
-			List<String> edicion = new ArrayList<>();
-			iccec.ingresarCategoria(nomCatIns);
-			iccec.ingresarCursoporCat(Curso);
-			edicion=iccec.listarEdicionCat();
+			 	}
+				else 
+					{
+					request.setAttribute("listaEdicion", edicion);
+					rd= request.getRequestDispatcher("consultaEdicionCurso3.jsp");
+					rd.forward(request, response);
+					}
+			}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
-			if (edicion.isEmpty())
-		 	{
-			request.setAttribute("mensaje", "No existen ediciones disponibles");
-			rd= request.getRequestDispatcher("/notificacion.jsp");
-			rd.forward(request, response);
-		 	}
-			else 
-				{
-				request.setAttribute("listaEdicion", edicion);
-				rd= request.getRequestDispatcher("consultaEdicionCurso3.jsp");
-				rd.forward(request, response);
-				}
-		}
 	
 	}
 	
+
+			
+	
+		
+		
+	
+	public void ingresarCategoria(String nomCategoria) throws Exception {
+		ControladorConsultaEdicionCurso2PublishService cecp1 = new ControladorConsultaEdicionCurso2PublishServiceLocator();
+		ControladorConsultaEdicionCurso2Publish port= cecp1.getControladorConsultaEdicionCurso2PublishPort();
+		port.ingresarCategoria(nomCategoria);
+	}
+	public void ingresarInstituto(String nomInstituto) throws Exception {
+		ControladorConsultaEdicionCurso2PublishService cecp1 = new ControladorConsultaEdicionCurso2PublishServiceLocator();
+		ControladorConsultaEdicionCurso2Publish port= cecp1.getControladorConsultaEdicionCurso2PublishPort();
+		port.ingresarInstituto(nomInstituto);
+	}
+	
+	public void ingresarCurso(String nomCurso) throws Exception {
+		ControladorConsultaEdicionCurso2PublishService cecp1 = new ControladorConsultaEdicionCurso2PublishServiceLocator();
+		ControladorConsultaEdicionCurso2Publish port= cecp1.getControladorConsultaEdicionCurso2PublishPort();
+		port.ingresarCurso(nomCurso);
+	}
+	
+	public void ingresarCursoPorCat(String nomCurso) throws Exception {
+		ControladorConsultaEdicionCurso2PublishService cecp1 = new ControladorConsultaEdicionCurso2PublishServiceLocator();
+		ControladorConsultaEdicionCurso2Publish port= cecp1.getControladorConsultaEdicionCurso2PublishPort();
+		port.ingresarCursoPorCat(nomCurso);
+	}
+	
+	public String[] listarEdicion() throws Exception {
+		ControladorConsultaEdicionCurso2PublishService cecp1 = new ControladorConsultaEdicionCurso2PublishServiceLocator();
+		ControladorConsultaEdicionCurso2Publish port= cecp1.getControladorConsultaEdicionCurso2PublishPort();
+		return port.listarEdicion();
+	}
+	
+	public String[] listarEdicionporCat() throws Exception {
+		ControladorConsultaEdicionCurso2PublishService cecp1 = new ControladorConsultaEdicionCurso2PublishServiceLocator();
+		ControladorConsultaEdicionCurso2Publish port= cecp1.getControladorConsultaEdicionCurso2PublishPort();
+		return port.listarEdicionCat();
+	}
+	
+	
 }
+	

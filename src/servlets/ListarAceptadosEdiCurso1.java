@@ -2,8 +2,6 @@ package servlets;
 
 import java.io.IOException;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -13,8 +11,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import interfaces.Fabrica;
-import interfaces.IControladorListarAceptadosEdiCurso;
+
+import publicadores.ControladorListarAceptadosEdiCurso;
+import publicadores.ControladorListarAceptadosEdiCurso1;
+import publicadores.ControladorListarAceptadosEdiCurso1Service;
+import publicadores.ControladorListarAceptadosEdiCurso1ServiceLocator;
+import publicadores.ControladorListarAceptadosEdiCursoService;
+import publicadores.ControladorListarAceptadosEdiCursoServiceLocator;
 
 
 /**
@@ -49,19 +52,43 @@ public class ListarAceptadosEdiCurso1 extends HttpServlet {
 		String curso= request.getParameter("ListCurso");
 		String nomIns= request.getParameter("nomIns");
 		
-		Fabrica fabrica = Fabrica.getInstancia();
-		IControladorListarAceptadosEdiCurso icseec = fabrica.getIControladorListarAceptadosEdiCurso();
+		
 		HttpSession sesion = request.getSession();
 		
-		List<String> edicion = new ArrayList<>();
-		icseec.ingresarInstituto(nomIns);
-		icseec.ingresarCurso(curso);
-		edicion=icseec.listarEdicion();
+		String[] edicion;
+		
+		try {
+			
+		ingresarInstituto(nomIns);
+		ingresarCurso(curso);
+		edicion=listarEdicion();
 		request.setAttribute("Curso", curso);
 		request.setAttribute("instituto", nomIns);
 		request.setAttribute("listaEdicion", edicion);
 		rd= request.getRequestDispatcher("listarAceptadosEdiCurso2.jsp");
 		rd.forward(request, response);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
+	public void ingresarInstituto (String curso) throws Exception {
+		ControladorListarAceptadosEdiCurso1Service cps = new ControladorListarAceptadosEdiCurso1ServiceLocator();
+		ControladorListarAceptadosEdiCurso1 port = cps.getControladorListarAceptadosEdiCurso1Port();
+		port.ingresarInstituto(curso);	
 	}
 
+	public void ingresarCurso (String curso) throws Exception {
+		ControladorListarAceptadosEdiCursoService cps = new ControladorListarAceptadosEdiCursoServiceLocator();
+		ControladorListarAceptadosEdiCurso port = cps.getControladorListarAceptadosEdiCursoPort();
+		port.ingresarCurso(curso);	
+	}
+	
+	public String[] listarEdicion() throws Exception {
+		ControladorListarAceptadosEdiCursoService cps = new ControladorListarAceptadosEdiCursoServiceLocator();
+		ControladorListarAceptadosEdiCurso port = cps.getControladorListarAceptadosEdiCursoPort();
+		return port.listarEdicion();	
+	}
 }

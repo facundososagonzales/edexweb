@@ -8,13 +8,16 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Insert title here</title>
 <%@include file="/header.jsp" %>
-<%@ page import="interfaces.Fabrica" %>
-<%@ page import="interfaces.IControladorSeleccionarEstEdiCurso" %>
+
+<%@page import="publicadores.ControladorSeleccionarEstEdiCursoPublish"%>
+<%@page import="publicadores.ControladorSeleccionarEstEdiCursoPublishService"%>
+<%@page import="publicadores.ControladorSeleccionarEstEdiCursoPublishServiceLocator"%>
 </head>
 <% 
-Fabrica fabrica = Fabrica.getInstancia();
-IControladorSeleccionarEstEdiCurso iciec = fabrica.getIControladorSeleccionarEstEdiCurso();
-List<String> lista = iciec.listarInstitutos();
+ControladorSeleccionarEstEdiCursoPublishService cdup = new ControladorSeleccionarEstEdiCursoPublishServiceLocator();
+ControladorSeleccionarEstEdiCursoPublish port= cdup.getControladorSeleccionarEstEdiCursoPublishPort();
+String[] lista = port.listarInstitutos();
+
 %>
 <body>
 	<form action="SeleccionarEstudiantesEdicionCurso" method="post">

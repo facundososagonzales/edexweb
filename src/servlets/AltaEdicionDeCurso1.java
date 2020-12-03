@@ -9,9 +9,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import interfaces.Fabrica;
-import interfaces.IControladorAltaEdicionCurso;
-
 /**
  * Servlet implementation class AltaEdicionDeCurso1
  */
@@ -38,7 +35,7 @@ public class AltaEdicionDeCurso1 extends HttpServlet {
 		String fechaInicio = request.getParameter("fechaInicio");
 		String fechaFin = request.getParameter("fechaFin");
 		String curso = request.getParameter("Cursos"); 
-		RequestDispatcher rd= request.getRequestDispatcher("consultaEdicionCurso1.jsp");
+		RequestDispatcher rd;
 		
 		request.setAttribute("Instituto", Instituto);
 		request.setAttribute("curso", curso);

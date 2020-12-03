@@ -1,6 +1,8 @@
 package servlets;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,9 +14,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import datatypes.DtEdicionDetalle;
-import interfaces.Fabrica;
-import interfaces.IControladorInsEdicionCurso;
+import publicadores.DtEdicionDetalle;
+import publicadores.ControladorInsEdicionCursoPublish;
+import publicadores.ControladorInsEdicionCursoPublishService;
+import publicadores.ControladorInsEdicionCursoPublishServiceLocator;
 
 /**
  * Servlet implementation class InscripcionEdicionCurso3
@@ -46,22 +49,55 @@ public class InscripcionEdicionCurso3 extends HttpServlet {
 		RequestDispatcher rd;
 		
 		String edicion= request.getParameter("ListEdicion");
-		DtEdicionDetalle dtEdicion;
+		publicadores.DtEdicionDetalle dtEdicion= null;
+		dtEdicion=new publicadores.DtEdicionDetalle();
 		
-		Fabrica fabrica = Fabrica.getInstancia();
-		IControladorInsEdicionCurso iciec = fabrica.getIControladorInsEdicionCurso();
+		
 		HttpSession sesion = request.getSession();
 	
 		
-			iciec.ingresarEdicion(edicion);
-			dtEdicion= iciec.SeleccionarEdicion();
+			try {
+				System.out.println(edicion);
+				ingresarEdicion(edicion);
+				System.out.println("llegue a ingresar");
+				dtEdicion= seleccionarEdicion();
+				
+				String datosEdicion ="Datos de la Edicion:";
+				
+				DateFormat date1 = new SimpleDateFormat("dd MMMM yyyy");
+				String strDate = date1.format(dtEdicion.getFechaI().getTime());
+				String strDate1 = date1.format(dtEdicion.getFechaF().getTime());
+				String strDate2 = date1.format(dtEdicion.getFechaPub().getTime());
+				datosEdicion = datosEdicion + "\n" + "Nombre:"+dtEdicion.getNombre()+"\n"+"Fecha Inicio:"+strDate+/*strDate+*/
+						"\n"+"Fecha Final:"+strDate1+"\n"+"Cupos:"+dtEdicion.getCupos()+"\n"+"Fecha Pub:"+strDate2;
+				
+				
+		
+				
+				request.setAttribute("edicionSeleccionada", edicion);
+				rd= request.getRequestDispatcher("InscripcionEdicionCurso4.jsp");
+		
+				request.setAttribute("DatosEdicionSeleccionada", datosEdicion);
+				rd= request.getRequestDispatcher("InscripcionEdicionCurso4.jsp");
+				rd.forward(request, response);
+			} 
+			catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
-			request.setAttribute("edicionSeleccionada", edicion);
-			rd= request.getRequestDispatcher("InscripcionEdicionCurso4.jsp");
-	
-			request.setAttribute("DatosEdicionSeleccionada", dtEdicion);
-			rd= request.getRequestDispatcher("InscripcionEdicionCurso4.jsp");
-			rd.forward(request, response);
 	}
 
+	
+	public void ingresarEdicion(String nomEdi) throws Exception {
+		ControladorInsEdicionCursoPublishService ciecp = new ControladorInsEdicionCursoPublishServiceLocator();
+		ControladorInsEdicionCursoPublish port= ciecp.getControladorInsEdicionCursoPublishPort();
+		port.ingresarEdicion(nomEdi);
+	}
+	
+	public publicadores.DtEdicionDetalle seleccionarEdicion() throws Exception {
+		ControladorInsEdicionCursoPublishService ciecp = new ControladorInsEdicionCursoPublishServiceLocator();
+		ControladorInsEdicionCursoPublish port= ciecp.getControladorInsEdicionCursoPublishPort();
+		return port.seleccionarEdicion();
+	}
 }

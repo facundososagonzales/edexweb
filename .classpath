@@ -22,5 +22,14 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/facu_/OneDrive/Desktop/axis-1_4/lib/axis.jar" sourcepath="C:/Users/facu_/.m2/repository/org/apache/axis/axis/1.4/axis-1.4-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/facu_/OneDrive/Desktop/axis-1_4/lib/axis-ant.jar"/>
+	<classpathentry kind="lib" path="C:/Users/facu_/OneDrive/Desktop/axis-1_4/lib/commons-discovery-0.2.jar" sourcepath="C:/Users/facu_/.m2/repository/commons-discovery/commons-discovery/0.2/commons-discovery-0.2-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/facu_/OneDrive/Desktop/axis-1_4/lib/commons-logging-1.0.4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/facu_/OneDrive/Desktop/axis-1_4/lib/jaxrpc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/facu_/OneDrive/Desktop/axis-1_4/lib/log4j-1.2.8.jar"/>
+	<classpathentry kind="lib" path="C:/Users/facu_/OneDrive/Desktop/axis-1_4/lib/saaj.jar"/>
+	<classpathentry kind="lib" path="C:/Users/facu_/OneDrive/Desktop/axis-1_4/lib/wsdl4j-1.5.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/facu_/Downloads/webserviceutils(1).jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

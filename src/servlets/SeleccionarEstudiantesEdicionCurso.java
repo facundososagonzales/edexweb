@@ -13,8 +13,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import interfaces.Fabrica;
-import interfaces.IControladorSeleccionarEstEdiCurso;
+
+
+import publicadores.ControladorSeleccionarEstEdiCursoPublish;
+import publicadores.ControladorSeleccionarEstEdiCursoPublishService;
+import publicadores.ControladorSeleccionarEstEdiCursoPublishServiceLocator;
 
 /**
  * Servlet implementation class SeleccionarEstudiantesEdicionCurso
@@ -45,21 +48,39 @@ public class SeleccionarEstudiantesEdicionCurso extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		RequestDispatcher rd;
 		String ListIns= request.getParameter("ListIns");
-		request.setAttribute("instituto", ListIns);
-		rd= request.getRequestDispatcher("SeleccionarEstudiantesEdicionCurso1.jsp");
-		Fabrica fabrica = Fabrica.getInstancia();
-		IControladorSeleccionarEstEdiCurso icseec = fabrica.getIControladorSeleccionarEstEdiCurso();
+		
 		HttpSession sesion = request.getSession();
 			
-		List<String> curso = new ArrayList<>();
-		icseec.ingresarInstituto(ListIns);
-		curso=icseec.listarCursos();
-		request.setAttribute("listaCursos", curso);
-		rd= request.getRequestDispatcher("SeleccionarEstudiantesEdicionCurso1.jsp");
 		
+		try {
+			String[] curso;
+			ingresarInstituto(ListIns);
+			
+			curso=listarCursos();
+			
+			request.setAttribute("instituto", ListIns);
+			rd= request.getRequestDispatcher("SeleccionarEstudiantesEdicionCurso1.jsp");
+			request.setAttribute("listaCursos", curso);
+			rd= request.getRequestDispatcher("SeleccionarEstudiantesEdicionCurso1.jsp");
+			
 
-		rd.forward(request, response);
+			rd.forward(request, response);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	
-
+	public void ingresarInstituto(String nombreI) throws Exception {
+		ControladorSeleccionarEstEdiCursoPublishService cecp = new ControladorSeleccionarEstEdiCursoPublishServiceLocator();
+		ControladorSeleccionarEstEdiCursoPublish port= cecp.getControladorSeleccionarEstEdiCursoPublishPort();
+		port.ingresarInstituto(nombreI);
+	}
+	public String[] listarCursos() throws Exception {
+		ControladorSeleccionarEstEdiCursoPublishService cecp = new ControladorSeleccionarEstEdiCursoPublishServiceLocator();
+		ControladorSeleccionarEstEdiCursoPublish port= cecp.getControladorSeleccionarEstEdiCursoPublishPort();
+		return port.listarCursos();
+	}
+	
 }

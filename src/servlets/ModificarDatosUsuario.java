@@ -13,9 +13,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import datatypes.DtUsuario;
-import interfaces.Fabrica;
-import interfaces.IControladorModificarDatosUsuario;
+//import datatypes.DtUsuario;
+
+//import datatypes.DtUsuario;
+//import interfaces.Fabrica;
+//import interfaces.IControladorModificarDatosUsuario;
+
+import publicadores.ControladorModificarDatosUsuarioPublish;
+import publicadores.ControladorModificarDatosUsuarioPublishService;
+import publicadores.ControladorModificarDatosUsuarioPublishServiceLocator;
 
 /**
  * Servlet implementation class ModificarDatosUsuario
@@ -46,19 +52,35 @@ public class ModificarDatosUsuario extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		RequestDispatcher rd;
-		Fabrica fabrica = Fabrica.getInstancia();
-		IControladorModificarDatosUsuario icmdu = fabrica.getIControladorM();
+		//Fabrica fabrica = Fabrica.getInstancia();
+		//IControladorModificarDatosUsuario icmdu = fabrica.getIControladorM();
 		String nick= request.getParameter("nick");
 		String nombre= request.getParameter("nombre");
 		String apellido= request.getParameter("apellido");
+		publicadores.DtUsuario dtUsuario= null;
+		dtUsuario=new publicadores.DtUsuario();
+		
+		publicadores.DtUsuario dtU= null;
+		dtU=new publicadores.DtUsuario();
+		
+		dtU.setApellido(apellido);
+		dtU.setNombre(nombre);
 		
 		
-		DtUsuario dtUsuario = icmdu.elegirUsuario(nick);
-		DtUsuario dtU = new DtUsuario(nombre,apellido);
-		icmdu.modificar(dtU);
-		request.setAttribute("mensaje", "Modificación realizada exitosamente");
-		rd= request.getRequestDispatcher("/notificacion.jsp");
-		rd.forward(request, response);
+		
+		try {
+			dtUsuario =elegirUsuario(nick);
+			modificar(dtU);
+			request.setAttribute("mensaje", "Modificación realizada exitosamente");
+			rd= request.getRequestDispatcher("/notificacion.jsp");
+			rd.forward(request, response);
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 		
 	/*	HttpSession sesion = request.getSession();
 		
@@ -83,5 +105,19 @@ public class ModificarDatosUsuario extends HttpServlet {
 		rd.forward(request, response);
 	*/
 	}
+	
+	public publicadores.DtUsuario elegirUsuario(String nick) throws Exception {
+		ControladorModificarDatosUsuarioPublishService mdup = new ControladorModificarDatosUsuarioPublishServiceLocator();
+		ControladorModificarDatosUsuarioPublish port= mdup.getControladorModificarDatosUsuarioPublishPort();
+		return port.elegirUsuario(nick);
+	}
+	
+	public void modificar(publicadores.DtUsuario usuario) throws Exception {
+		ControladorModificarDatosUsuarioPublishService mdup = new ControladorModificarDatosUsuarioPublishServiceLocator();
+		ControladorModificarDatosUsuarioPublish port= mdup.getControladorModificarDatosUsuarioPublishPort();
+		port.modificar(usuario);
+	}
 
 }
+
+

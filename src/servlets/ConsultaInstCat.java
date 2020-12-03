@@ -1,6 +1,7 @@
 package servlets;
 
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
@@ -9,13 +10,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.rpc.ServiceException;
 
-import datatypes.DtCursoBase;
-import excepciones.ExisteCategoriaException;
-import excepciones.ExisteInstitutoException;
-import excepciones.ListaDeCursosVaciaException;
-import interfaces.Fabrica;
-import interfaces.IControladorConsultaDeCurso;
+import publicadores.ControladorConsultaDeCursoPublish;
+import publicadores.ControladorConsultaDeCursoPublishService;
+import publicadores.ControladorConsultaDeCursoPublishServiceLocator;
+import publicadores.DtCursoBase;
 
 /**
  * Servlet implementation class ConsultaInstCat
@@ -45,40 +45,82 @@ public class ConsultaInstCat extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		Fabrica fab = Fabrica.getInstancia();
-		IControladorConsultaDeCurso icon = fab.getIControladorConsultaDeCurso();
 		String dato = request.getParameter("Dato");		
+		RequestDispatcher rd;
 		
 		if (request.getParameter("boton").equals("instituto")){
-			try {
-				ArrayList<DtCursoBase> cursos = icon.ingresarInstituto(dato);
+			
+				ArrayList<DtCursoBase> cursos = null;
+				try {
+					cursos = ingresarInstituto(dato);
+				} catch (RemoteException | ServiceException e) {
+					// TODO Auto-generated catch block
+					//e.printStackTrace();
+					request.setAttribute("mensaje","Instituto no existe/ No se encontraron Cursos asociados al Instituto");
+					rd = request.getRequestDispatcher("/notificacion.jsp");
+					rd.forward(request, response);
+				}
 				request.setAttribute("cursos", cursos);
 				request.setAttribute("mostrar", "instituto");
-			}catch(ExisteInstitutoException e) {
-				throw new ServletException(e.getMessage());
-			}catch(ListaDeCursosVaciaException e1) {
-				throw new ServletException(e1.getMessage());
-			}
+			
 			
 		}else if (request.getParameter("boton").equals("categoria")) {
-			try {
-				ArrayList<DtCursoBase> cursos = icon.ingresarCategoria(dato);
+			
+				ArrayList<DtCursoBase> cursos=null;
+				try {
+					cursos = ingresarCategoria(dato);
+				} catch (RemoteException | ServiceException e) {
+					// TODO Auto-generated catch block
+					request.setAttribute("mensaje","Categoria no existe/ No se encontraron Cursos asociados a la Categoria");
+					rd = request.getRequestDispatcher("/notificacion.jsp");
+					rd.forward(request, response);
+					//e.printStackTrace();
+				}
 				request.setAttribute("cursos", cursos);
 				request.setAttribute("mostrar", "categoria");
 			
-			}catch(ExisteCategoriaException e) {
-				throw new ServletException(e.getMessage());
-			
-			}catch(ListaDeCursosVaciaException e1) {
-				throw new ServletException(e1.getMessage());
 			}
-		}
 		request.setAttribute("Dato", dato);
-		RequestDispatcher rd;
 		rd = request.getRequestDispatcher("/cursosDelSistema.jsp");
 		rd.forward(request, response);
 			
 		
+	}
+	
+	public ArrayList<publicadores.DtCursoBase> ingresarInstituto(String dato) throws ServiceException, RemoteException{
+		
+		ControladorConsultaDeCursoPublishService cps = new ControladorConsultaDeCursoPublishServiceLocator();
+		ControladorConsultaDeCursoPublish port = cps.getControladorConsultaDeCursoPublishPort();
+		publicadores.DtCursoBase[] cursosAux = port.ingresarInstituto(dato);
+		
+		ArrayList<publicadores.DtCursoBase> ret = new ArrayList<>();
+		for (int i = 0; i < cursosAux.length; ++i) {
+			ret.add(cursosAux[i]);
+		}
+		
+		if(ret.isEmpty()) {
+			throw new RemoteException();
+		}
+		
+		return ret;
+	}
+	
+	public ArrayList<publicadores.DtCursoBase> ingresarCategoria(String dato) throws ServiceException, RemoteException{
+		
+		ControladorConsultaDeCursoPublishService cps = new ControladorConsultaDeCursoPublishServiceLocator();
+		ControladorConsultaDeCursoPublish port = cps.getControladorConsultaDeCursoPublishPort();
+		publicadores.DtCursoBase[] cursosAux = port.ingresarCategoria(dato);
+		
+		ArrayList<publicadores.DtCursoBase> ret = new ArrayList<>();
+		for (int i = 0; i < cursosAux.length; ++i) {
+			ret.add(cursosAux[i]);
+		}
+		
+		if(ret.isEmpty()) {
+			throw new RemoteException();
+		}
+		
+		return ret;
 	}
 
 }

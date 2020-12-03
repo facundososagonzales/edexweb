@@ -1,6 +1,6 @@
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List"%>
-<%@page import="datatypes.DtCursoBase"%>
+<%@page import="publicadores.DtCursoBase"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -16,7 +16,7 @@
 		String mostrar = (String) request.getAttribute("mostrar");
 		String dato = (String) request.getAttribute("Dato");
 		if (mostrar.equals("instituto")) {
-			ArrayList<DtCursoBase> cursos = (ArrayList<DtCursoBase>) request.getAttribute("cursos");
+			ArrayList<publicadores.DtCursoBase> cursos = (ArrayList<publicadores.DtCursoBase>) request.getAttribute("cursos");
 	%>
 	<h1>Cursos asociados al instituto <%=dato%></h1>
 
@@ -32,14 +32,15 @@
 	  <tbody>
 	  <%
 				int i = 1;
-					for (DtCursoBase dt : cursos) {
+					for (publicadores.DtCursoBase dt : cursos) {
 			%>
 	    <tr>
 	      <th scope="row"><%=i%></th>
 	      <td><%=dt.getNombre()%></td>
 	      <td><%=dt.getDescripcion()%></td>
 	    </tr>
-	    <% } %>
+	    <% i++;
+	    } %>
 	  </tbody>
 	</table>
 	
@@ -61,7 +62,7 @@
 	</form>
 
 	<% } else if (mostrar.equals("categoria")) {
-		ArrayList<DtCursoBase> cursos = (ArrayList<DtCursoBase>) request.getAttribute("cursos");
+		ArrayList<publicadores.DtCursoBase> cursos = (ArrayList<publicadores.DtCursoBase>) request.getAttribute("cursos");
 	%>
 	<h1>Cursos asociados a la Categoria <%=dato%></h1>
 
@@ -77,7 +78,7 @@
 	  <tbody>
 	  <%
 				int i = 1;
-					for (DtCursoBase dt : cursos) {
+					for (publicadores.DtCursoBase dt : cursos) {
 			%>
 	    <tr>
 	      <th scope="row"><%=i%></th>

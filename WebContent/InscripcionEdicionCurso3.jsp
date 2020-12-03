@@ -11,8 +11,8 @@
 </head>
 
 <%
-List <String> listaEdicion = new ArrayList<>();
-listaEdicion = (List<String>)request.getAttribute("listaEdicion");
+String[] listaEdicion;
+listaEdicion = (String[])request.getAttribute("listaEdicion");
 
 
 %>

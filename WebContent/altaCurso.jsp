@@ -1,9 +1,11 @@
 <%@page import="java.util.ArrayList"%>
 <%@ page import="java.sql.Time"%>
 
+<%@page import="publicadores.ControladorAltaCurso"%>
+<%@page import="publicadores.ControladorAltaCursoServiceLocator"%>
+<%@page import="publicadores.ControladorAltaCursoService"%>
+
 <%@page import="java.util.List"%>
-<%@ page import="interfaces.Fabrica" %>
-<%@ page import="interfaces.IControladorAltaCurso" %>
 
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
@@ -16,12 +18,11 @@
 	
 	<% 
 	
-	Fabrica fabrica = Fabrica.getInstancia();
-	IControladorAltaCurso icac = fabrica.getIControladorAltaCurso();
-	List <String> categorias = new ArrayList <>();
-	List <String> previas = new ArrayList <>();
-	categorias = icac.listarCategorias();
-	previas = icac.listarCursos();
+	ControladorAltaCursoService icon = new ControladorAltaCursoServiceLocator();
+	ControladorAltaCurso port = icon.getControladorAltaCursoPort();
+	
+	String[] categorias = port.listarCategorias();
+	String[] previas = port.listarCursos();
 	
 	%>
 </head>

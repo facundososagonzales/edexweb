@@ -1,11 +1,14 @@
+<%@page import="publicadores.DtUsuario"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"
     %>
-    
-    <%@ page import="interfaces.Fabrica" %>
-		<%@ page import="interfaces.IControladorModificarDatosUsuario" %>
-		<%@ page import="datatypes.DtUsuario" %>
+		<%@ page import="publicadores.DtUsuario" %>
 		<%@ page import="java.util.Date" %>
+		
+	<%@page import="publicadores.ControladorModificarDatosUsuarioPublish"%>
+		<%@page import="publicadores.ControladorModificarDatosUsuarioPublishService"%>
+		<%@page import="publicadores.ControladorModificarDatosUsuarioPublishServiceLocator"%>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -20,8 +23,10 @@
 	String fechanac = (String)request.getAttribute ("fecha de nacimiento");*/
 	
 	
-	Fabrica fabrica = Fabrica.getInstancia();
-	IControladorModificarDatosUsuario icmdu = fabrica.getIControladorM();
+	//Fabrica fabrica = Fabrica.getInstancia();
+	//IControladorModificarDatosUsuario icmdu = fabrica.getIControladorM();
+	
+	
 	
 	HttpSession sesion = request.getSession();
 	
@@ -29,11 +34,17 @@
 	
 	System.out.println("nick");
 	//DtUsuario usu = icmdu.elegirUsuario(nick);
-	DtUsuario usu = icmdu.datosUsuario(nick);
+	ControladorModificarDatosUsuarioPublishService mdup = new ControladorModificarDatosUsuarioPublishServiceLocator();
+	ControladorModificarDatosUsuarioPublish port= mdup.getControladorModificarDatosUsuarioPublishPort();
+	DtUsuario usu = port.datosUsuario(nick);
 	String nick1 = usu.getNick();
 	String correo= usu.getCorreo();
 	String nombre = usu.getNombre();
 	String apellido = usu.getApellido();
+	
+	
+
+		
 	
 	%>
 	

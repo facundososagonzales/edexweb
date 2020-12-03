@@ -11,8 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import interfaces.Fabrica;
-import interfaces.IControladorSeleccionarEstEdiCurso;
+
+import publicadores.ControladorSeleccionarEstEdiCurso4Publish;
+import publicadores.ControladorSeleccionarEstEdiCurso4PublishService;
+import publicadores.ControladorSeleccionarEstEdiCurso4PublishServiceLocator;
 
 
 /**
@@ -43,24 +45,84 @@ public class SeleccionarEstudiantesEdicionCurso4 extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		RequestDispatcher rd;
-		Fabrica fabrica = Fabrica.getInstancia();
-		IControladorSeleccionarEstEdiCurso icseec = fabrica.getIControladorSeleccionarEstEdiCurso();
+		System.out.println("servlet");
 		String curso= request.getParameter("curso");
+		System.out.println(curso);
 		String nomIns=request.getParameter("nomIns");
+		System.out.println(nomIns);
 		String edicion=request.getParameter("edicion");
+		System.out.println(edicion);
 		HttpSession sesion = request.getSession();
 		String estudiante = request.getParameter("ListEst");
+		System.out.println(estudiante);
 		String estado = request.getParameter("ListEstado");
-		icseec.ingresarInstituto(nomIns);
-		icseec.ingresarCurso(curso);
-		icseec.ingresarEdicion(edicion);
+		System.out.println(estado);
 		
-		icseec.ingresarEstudiante(estudiante);
-		icseec.seleccionarEstadoEstudiante(estado);
+		try {
+			ingresarInstituto(nomIns);
+			System.out.println(nomIns);
+			ingresarCurso(curso);
+			System.out.println(curso);
+			ingresarEdicion(edicion);
+			System.out.println(edicion);
+			ingresarEstudiante(estudiante);
+			System.out.println(estudiante);
+			
+			
+			seleccionarEstadoEstudiante(estado);
+			System.out.println(estado);
 		
 		request.setAttribute("mensaje", "Estado de inscripcion actualizado");
 		rd= request.getRequestDispatcher("/notificacion.jsp");
 		rd.forward(request, response);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
+	
+	public void ingresarEdicion(String nomEdi) throws Exception {
+		ControladorSeleccionarEstEdiCurso4PublishService cecp2 = new ControladorSeleccionarEstEdiCurso4PublishServiceLocator();
+		ControladorSeleccionarEstEdiCurso4Publish port= cecp2.getControladorSeleccionarEstEdiCurso4PublishPort();
+		port.ingresarEdicion(nomEdi);
+		}
+	
+	public void ingresarEstudiante(String nomEdi) throws Exception {
+		ControladorSeleccionarEstEdiCurso4PublishService cecp2 = new ControladorSeleccionarEstEdiCurso4PublishServiceLocator();
+		ControladorSeleccionarEstEdiCurso4Publish port= cecp2.getControladorSeleccionarEstEdiCurso4PublishPort();
+		port.ingresarEstudiante(nomEdi);
+		}
+	
+	public void ingresarInstituto(String nombreI) throws Exception {
+		ControladorSeleccionarEstEdiCurso4PublishService cecp2 = new ControladorSeleccionarEstEdiCurso4PublishServiceLocator();
+		ControladorSeleccionarEstEdiCurso4Publish port= cecp2.getControladorSeleccionarEstEdiCurso4PublishPort();
+		port.ingresarInstituto(nombreI);
+		}
 
+	public void ingresarCurso(String codCur)  throws Exception {
+		ControladorSeleccionarEstEdiCurso4PublishService cecp2 = new ControladorSeleccionarEstEdiCurso4PublishServiceLocator();
+		ControladorSeleccionarEstEdiCurso4Publish port= cecp2.getControladorSeleccionarEstEdiCurso4PublishPort();
+		port.ingresarCurso(codCur);
+		}
+	
+	public String[] listarEstudiantes()  throws Exception {
+		ControladorSeleccionarEstEdiCurso4PublishService cecp2 = new ControladorSeleccionarEstEdiCurso4PublishServiceLocator();
+		ControladorSeleccionarEstEdiCurso4Publish port= cecp2.getControladorSeleccionarEstEdiCurso4PublishPort();
+		return port.listarEstudiantes();
+		}
+	
+	public publicadores.DtEstudiante[] listarEstudiantesInscriptos()  throws Exception {
+		ControladorSeleccionarEstEdiCurso4PublishService cecp2 = new ControladorSeleccionarEstEdiCurso4PublishServiceLocator();
+		ControladorSeleccionarEstEdiCurso4Publish port= cecp2.getControladorSeleccionarEstEdiCurso4PublishPort();
+		return port.listarEstudiantesInscriptos();
+		}
+	
+	public void seleccionarEstadoEstudiante(String estado)  throws Exception {
+		ControladorSeleccionarEstEdiCurso4PublishService cecp2 = new ControladorSeleccionarEstEdiCurso4PublishServiceLocator();
+		ControladorSeleccionarEstEdiCurso4Publish port= cecp2.getControladorSeleccionarEstEdiCurso4PublishPort();
+		 port.seleccionarEstadoEstudiante(estado);
+		}
 }
+
+
+

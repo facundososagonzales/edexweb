@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+    <%@page import="publicadores.ControladorListarAceptadosEdiCurso"%>
+<%@page import="publicadores.ControladorListarAceptadosEdiCursoServiceLocator"%>
+<%@page import="publicadores.ControladorListarAceptadosEdiCursoService"%>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -10,8 +13,12 @@
 </head>
 <%@include file="/header.jsp" %>
 <%
-List <String> listaCurso = new ArrayList<>();
-listaCurso = (List<String>)request.getAttribute("listaCursos");
+
+ControladorListarAceptadosEdiCursoService icon = new ControladorListarAceptadosEdiCursoServiceLocator();
+ControladorListarAceptadosEdiCurso port = icon.getControladorListarAceptadosEdiCursoPort();
+
+String[] listaCurso;
+listaCurso = (String[])request.getAttribute("listaCursos");
 String nomIns =(String)request.getAttribute("instituto");
 
 %>

@@ -13,9 +13,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import datatypes.DtEstudiante;
-import interfaces.Fabrica;
-import interfaces.IControladorSeleccionarEstEdiCurso;
+import publicadores.DtEstudiante;
+import publicadores.Estado;
+import publicadores.ControladorSeleccionarEstEdiCurso3Publish;
+import publicadores.ControladorSeleccionarEstEdiCurso3PublishService;
+import publicadores.ControladorSeleccionarEstEdiCurso3PublishServiceLocator;
 
 
 /**
@@ -50,27 +52,78 @@ public class SeleccionarEstudiantesEdicionCurso3 extends HttpServlet {
 		String curso= request.getParameter("curso");
 		String nomIns=request.getParameter("nomIns");
 		String edicion=request.getParameter("edicion");
-		System.out.println(nomIns+" inst");
-		System.out.println(curso+" edicion");
-		System.out.println(edicion+" curso");
-		Fabrica fabrica = Fabrica.getInstancia();
-		IControladorSeleccionarEstEdiCurso icseec = fabrica.getIControladorSeleccionarEstEdiCurso();
+		
+		
 		HttpSession sesion = request.getSession();
 		
-		icseec.ingresarInstituto(nomIns);
-		icseec.ingresarCurso(curso);
-		icseec.ingresarEdicion(edicion);
-		ArrayList<DtEstudiante> dtEst = new ArrayList<>();
-		dtEst = icseec.listarEstudiantesInscriptos();
-		List<String> estudiantes = new ArrayList<>();
-		estudiantes = icseec.listarEstudiantes();
-		request.setAttribute("DatosEstudiantes", dtEst);
-		request.setAttribute("estudiantes", estudiantes);
-		request.setAttribute("nomIns", nomIns);
-		request.setAttribute("curso", curso);
-		request.setAttribute("edicion", edicion);
-		rd= request.getRequestDispatcher("SeleccionarEstudiantesEdicionCurso4.jsp");
-		rd.forward(request, response);
-	}
+		
+		
+		
+		try {
+			ingresarInstituto(nomIns);
+			ingresarCurso(curso);
+			ingresarEdicion(edicion);
+			publicadores.DtEstudiante[] dtEst= null;
+			
+			
+			//ArrayList<DtEstudiante> dtEst = new ArrayList<>();
+			
 
+			
+			
+			dtEst = listarEstudiantesInscriptos();
+			String[] estudiantes;
+			estudiantes = listarEstudiantes();
+			String mostrar ="";
+			
+			for(DtEstudiante d: dtEst) {
+				mostrar =  mostrar +"Nombre:   "+d.getNick() + "   ---   " + "Estado:   "+d.getEstado()+"\n";
+			}
+			
+			
+			request.setAttribute("mostrar", mostrar);
+			request.setAttribute("DatosEstudiantes", dtEst);
+			request.setAttribute("estudiantes", estudiantes);
+			request.setAttribute("nomIns", nomIns);
+			request.setAttribute("curso", curso);
+			request.setAttribute("edicion", edicion);
+			rd= request.getRequestDispatcher("SeleccionarEstudiantesEdicionCurso4.jsp");
+			rd.forward(request, response);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	
+	public void ingresarEdicion(String nomEdi) throws Exception {
+		ControladorSeleccionarEstEdiCurso3PublishService cecp2 = new ControladorSeleccionarEstEdiCurso3PublishServiceLocator();
+		ControladorSeleccionarEstEdiCurso3Publish port= cecp2.getControladorSeleccionarEstEdiCurso3PublishPort();
+		port.ingresarEdicion(nomEdi);
+		}
+	
+	public void ingresarInstituto(String nombreI) throws Exception {
+		ControladorSeleccionarEstEdiCurso3PublishService cecp2 = new ControladorSeleccionarEstEdiCurso3PublishServiceLocator();
+		ControladorSeleccionarEstEdiCurso3Publish port= cecp2.getControladorSeleccionarEstEdiCurso3PublishPort();
+		port.ingresarInstituto(nombreI);
+		}
+
+	public void ingresarCurso(String codCur)  throws Exception {
+		ControladorSeleccionarEstEdiCurso3PublishService cecp2 = new ControladorSeleccionarEstEdiCurso3PublishServiceLocator();
+		ControladorSeleccionarEstEdiCurso3Publish port= cecp2.getControladorSeleccionarEstEdiCurso3PublishPort();
+		port.ingresarCurso(codCur);
+		}
+	
+	public String[] listarEstudiantes()  throws Exception {
+		ControladorSeleccionarEstEdiCurso3PublishService cecp2 = new ControladorSeleccionarEstEdiCurso3PublishServiceLocator();
+		ControladorSeleccionarEstEdiCurso3Publish port= cecp2.getControladorSeleccionarEstEdiCurso3PublishPort();
+		return port.listarEstudiantes();
+		}
+	
+	public publicadores.DtEstudiante[] listarEstudiantesInscriptos()  throws Exception {
+		ControladorSeleccionarEstEdiCurso3PublishService cecp2 = new ControladorSeleccionarEstEdiCurso3PublishServiceLocator();
+		ControladorSeleccionarEstEdiCurso3Publish port= cecp2.getControladorSeleccionarEstEdiCurso3PublishPort();
+		return port.listarEstudiantesInscriptos();
+		}
 }

@@ -1,8 +1,8 @@
 package servlets;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -12,10 +12,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import datatypes.DtEdicionDetalle;
-import excepciones.ExisteNomEdicionException;
-import interfaces.Fabrica;
-import interfaces.IControladorListarAceptadosEdiCurso;;
+import publicadores.ControladorListarAceptadosEdiCurso2;
+import publicadores.ControladorListarAceptadosEdiCurso2Service;
+import publicadores.ControladorListarAceptadosEdiCurso2ServiceLocator;
+
 
 
 /**
@@ -49,35 +49,69 @@ public class ListarAceptadosEdiCurso2 extends HttpServlet {
 		
 		String edicion= request.getParameter("ListEdicion");
 		request.setAttribute("edicion", edicion);
+		System.out.println(edicion);
 		String nomIns= request.getParameter("nomIns");
 		request.setAttribute("instituto", nomIns);
+		System.out.println(nomIns);
 		String curso= request.getParameter("curso");
 		request.setAttribute("curso", curso);
-		DtEdicionDetalle dtEdicion;
-		List<String> inscriptos = new ArrayList<>();
+		System.out.println(curso);
 		
-		Fabrica fabrica = Fabrica.getInstancia();
-		IControladorListarAceptadosEdiCurso icseec = fabrica.getIControladorListarAceptadosEdiCurso();
+		publicadores.DtEdicionDetalle dtEdicion = new publicadores.DtEdicionDetalle();
+		
+		
+		String[] inscriptos;
+		
+		
 		HttpSession sesion = request.getSession();
 	
 		
 		try {		
-			icseec.ingresarEdicion(edicion);
-			dtEdicion= icseec.seleccionarEdicion(edicion);
-			inscriptos=icseec.listarEstudiantesInscriptos();
+			ingresarEdicion(edicion);
+			dtEdicion= seleccionarEdicion(edicion);
+			System.out.println(dtEdicion.getNombre());
+			inscriptos=listarEstudiantesInscriptos();
 			
+			String datosEdicion ="Datos de la Edicion:";
 			
-	
-			request.setAttribute("DatosEdicionSeleccionada", dtEdicion);
+			DateFormat date1 = new SimpleDateFormat("dd MMMM yyyy");
+			String strDate = date1.format(dtEdicion.getFechaI().getTime());
+			String strDate1 = date1.format(dtEdicion.getFechaF().getTime());
+			String strDate2 = date1.format(dtEdicion.getFechaPub().getTime());
+			datosEdicion = datosEdicion + "\n" + "Nombre:"+dtEdicion.getNombre()+"\n"+"Fecha Inicio:"+strDate+/*strDate+*/
+					"\n"+"Fecha Final:"+strDate1+"\n"+"Cupos:"+dtEdicion.getCupos()+"\n"+"Fecha Pub:"+strDate2+"\n"+"Estudiantes inscriptos: "+ "\n";
+			for (String s: inscriptos){ 
+				datosEdicion=datosEdicion +s+"\n";
+			}
+
+
+			request.setAttribute("DatosEdicionSeleccionada", datosEdicion);
 			rd= request.getRequestDispatcher("listarAceptadosEdiCurso3.jsp");
-			request.setAttribute("EstudiantesInscriptos", inscriptos);
-			rd= request.getRequestDispatcher("listarAceptadosEdiCurso3.jsp");
-			
+
 			rd.forward(request, response);
-			} catch (ExisteNomEdicionException e) {
+			
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+	}
+	
+	public void ingresarEdicion (String curso) throws Exception {
+		ControladorListarAceptadosEdiCurso2Service cps = new ControladorListarAceptadosEdiCurso2ServiceLocator();
+		ControladorListarAceptadosEdiCurso2 port = cps.getControladorListarAceptadosEdiCurso2Port();
+		port.ingresarInstituto(curso);	
+	}
+	
+	public publicadores.DtEdicionDetalle seleccionarEdicion (String edicion) throws Exception {
+		ControladorListarAceptadosEdiCurso2Service cps = new ControladorListarAceptadosEdiCurso2ServiceLocator();
+		ControladorListarAceptadosEdiCurso2 port = cps.getControladorListarAceptadosEdiCurso2Port();
+		return port.seleccionarEdicion(edicion);	
+	}
+	
+	public String[] listarEstudiantesInscriptos() throws Exception {
+		ControladorListarAceptadosEdiCurso2Service cps = new ControladorListarAceptadosEdiCurso2ServiceLocator();
+		ControladorListarAceptadosEdiCurso2 port = cps.getControladorListarAceptadosEdiCurso2Port();
+		return port.listarEstudiantesInscriptos();	
 	}
 
 }

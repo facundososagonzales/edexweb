@@ -10,9 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import excepciones.UsuarioNoExisteException;
-import interfaces.Fabrica;
-import interfaces.IControladorSeguirUsuario;
+import publicadores.ControladorSeguirUsuario;
+import publicadores.ControladorSeguirUsuarioService;
+import publicadores.ControladorSeguirUsuarioServiceLocator;
 
 /**
  * Servlet implementation class SeguirUsuario
@@ -32,22 +32,35 @@ public class SeguirUsuario extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		RequestDispatcher rd;
 		String nick = request.getParameter("nickUsuario");
-		
-		Fabrica fab = Fabrica.getInstancia();
-		IControladorSeguirUsuario icsu = fab.getIControladorSeguirUsuario();
+		//Fabrica fab = Fabrica.getInstancia();
+		//IControladorSeguirUsuario icsu = fab.getIControladorSeguirUsuario();
+		HttpSession session = request.getSession();
+		String logNick = (String)session.getAttribute("usuarioLogueado");
 		try {
-			icsu.ingresarUser(nick);
-			HttpSession session = request.getSession();
-			String logNick = (String)session.getAttribute("usuarioLogueado");
-			
-			icsu.seguirUsuario(logNick);
-		}catch(UsuarioNoExisteException ex) {
-            throw new ServletException(ex.getMessage());
+			boolean userLog = ingresarUser(nick);
+			if(userLog) {
+				seguirUsuario(logNick);
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
 		}
 		
-		request.setAttribute("Mensaje","Ahora esta siguiendo al usuario: "+nick);
+		request.setAttribute("mensaje","Ahora esta siguiendo al usuario: "+nick);
 		rd = request.getRequestDispatcher("/notificacion.jsp");
 		rd.forward(request, response);
+		
 	}
-
+	
+	public boolean ingresarUser(String nick) throws Exception {
+		ControladorSeguirUsuarioService sus = new ControladorSeguirUsuarioServiceLocator();
+		ControladorSeguirUsuario port = sus.getControladorSeguirUsuarioPort();
+		return port.ingresarUser(nick);
+	}
+	
+	public void seguirUsuario(String nickLogueado) throws Exception {
+		ControladorSeguirUsuarioService sus = new ControladorSeguirUsuarioServiceLocator();
+		ControladorSeguirUsuario port = sus.getControladorSeguirUsuarioPort();
+		port.seguirUsuario(nickLogueado);
+	}
+	
 }

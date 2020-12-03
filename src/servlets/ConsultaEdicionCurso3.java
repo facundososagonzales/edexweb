@@ -1,8 +1,10 @@
 package servlets;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -12,9 +14,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import datatypes.DtEdicionDetalle;
-import interfaces.Fabrica;
-import interfaces.IControladorConsultaEdicionCurso;
+//import interfaces.IControladorConsultaEdicionCurso;
+//import datatypes.DtEdicionDetalle;
+//import interfaces.Fabrica;
+//import interfaces.IControladorConsultaEdicionCurso;
+import publicadores.DtEdicionDetalle;
+import publicadores.ControladorConsultaEdicionCurso3Publish;
+import publicadores.ControladorConsultaEdicionCurso3PublishService;
+import publicadores.ControladorConsultaEdicionCurso3PublishServiceLocator;
 
 
 /**
@@ -48,27 +55,64 @@ public class ConsultaEdicionCurso3 extends HttpServlet {
 		RequestDispatcher rd;
 		
 		String edicion= request.getParameter("ListEdicion");
-		DtEdicionDetalle dtEdicion;
-		List<String> listDocente = new ArrayList<>();
 		
-		Fabrica fabrica = Fabrica.getInstancia();
-		IControladorConsultaEdicionCurso iccec = fabrica.getIControladorConsultaEdicionCurso();
+		
+		//Fabrica fabrica = Fabrica.getInstancia();
+		//IControladorConsultaEdicionCurso iccec = fabrica.getIControladorConsultaEdicionCurso();
 		HttpSession sesion = request.getSession();
-	
+		publicadores.DtEdicionDetalle dtEdicion= null;
+		dtEdicion=new publicadores.DtEdicionDetalle();
+		String[] listDocente;
 		
-			iccec.ingresarEdicion(edicion);
-			dtEdicion= iccec.SeleccionarEdicion();
-			listDocente = iccec.listarDocentes();
+			try {
+				
+				
+				ingresarEdicion(edicion);
+				listDocente = listarDocentes();
+				dtEdicion= seleccionarEdicion();
+				
+				String datosEdicion ="Datos de la Edicion:";
+				
+				DateFormat date1 = new SimpleDateFormat("dd MMMM yyyy");
+				String strDate = date1.format(dtEdicion.getFechaI().getTime());
+				String strDate1 = date1.format(dtEdicion.getFechaF().getTime());
+				String strDate2 = date1.format(dtEdicion.getFechaPub().getTime());
+				datosEdicion = datosEdicion + "\n" + "Nombre:"+dtEdicion.getNombre()+"\n"+"Fecha Inicio:"+strDate+/*strDate+*/
+						"\n"+"Fecha Final:"+strDate1+"\n"+"Cupos:"+dtEdicion.getCupos()+"\n"+"Fecha Pub:"+strDate2+"\n"+"Docentes: "+ "\n";
+				for (String s: listDocente){ 
+					datosEdicion=datosEdicion+s+"\n";
+				}
+		
+				request.setAttribute("DatosEdicionSeleccionada", datosEdicion);
+				rd= request.getRequestDispatcher("consultaEdicionCurso4.jsp");
+				//request.setAttribute("DocentesEdicionSeleccionada", listDocente);
+				//rd= request.getRequestDispatcher("consultaEdicionCurso4.jsp");
+				rd.forward(request, response);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
-	
-			request.setAttribute("DatosEdicionSeleccionada", dtEdicion);
-			rd= request.getRequestDispatcher("consultaEdicionCurso4.jsp");
-			request.setAttribute("DocentesEdicionSeleccionada", listDocente);
-			rd= request.getRequestDispatcher("consultaEdicionCurso4.jsp");
-			rd.forward(request, response);
 		
 	
 		
+	}
+	
+	public void ingresarEdicion(String nomEdicion) throws Exception {
+		ControladorConsultaEdicionCurso3PublishService cecp3 = new ControladorConsultaEdicionCurso3PublishServiceLocator();
+		ControladorConsultaEdicionCurso3Publish port= cecp3.getControladorConsultaEdicionCurso3PublishPort();
+		port.ingresarEdicion(nomEdicion);
+	}
+	
+	public publicadores.DtEdicionDetalle seleccionarEdicion() throws Exception {
+		ControladorConsultaEdicionCurso3PublishService cecp3 = new ControladorConsultaEdicionCurso3PublishServiceLocator();
+		ControladorConsultaEdicionCurso3Publish port= cecp3.getControladorConsultaEdicionCurso3PublishPort();
+		return port.seleccionarEdicion();
+	}
+	public String[] listarDocentes() throws Exception {
+		ControladorConsultaEdicionCurso3PublishService cecp3 = new ControladorConsultaEdicionCurso3PublishServiceLocator();
+		ControladorConsultaEdicionCurso3Publish port= cecp3.getControladorConsultaEdicionCurso3PublishPort();
+		return port.listarDocentes();
 	}
 
 }

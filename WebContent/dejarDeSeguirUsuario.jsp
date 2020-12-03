@@ -8,15 +8,15 @@
 		<%@include file="/header.jsp" %>
 		<%@ page import="java.util.ArrayList" %>
 		<%@ page import="java.util.List" %>
-		<%@ page import="interfaces.Fabrica" %>
-		<%@ page import="interfaces.IControladorDejarDeSeguir" %>
+		<%@page import="publicadores.ControladorDejarDeSeguir"%>
+		<%@page import="publicadores.ControladorDejarDeSeguirService"%>
+		<%@page import="publicadores.ControladorDejarDeSeguirServiceLocator"%>	
 		
 <%
-Fabrica fabrica = Fabrica.getInstancia();
-IControladorDejarDeSeguir icdds = fabrica.getIControladorDejarDeSeguir();
-List<String> seguidos = new ArrayList<>();
 String logNick = (String)session.getAttribute("usuarioLogueado");
-seguidos =icdds.listarSeguidos(logNick);
+ControladorDejarDeSeguirService sus = new ControladorDejarDeSeguirServiceLocator();
+ControladorDejarDeSeguir port = sus.getControladorDejarDeSeguirPort();
+String[] seguidos = port.listarSeguidos(logNick);
 
 %>
 		

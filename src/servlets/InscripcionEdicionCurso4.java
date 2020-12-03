@@ -12,8 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import interfaces.Fabrica;
-import interfaces.IControladorInsEdicionCurso;
+import publicadores.ControladorInsEdicionCursoPublish;
+import publicadores.ControladorInsEdicionCursoPublishService;
+import publicadores.ControladorInsEdicionCursoPublishServiceLocator;
 
 /**
  * Servlet implementation class InscripcionEdicionCurso4
@@ -42,21 +43,48 @@ public class InscripcionEdicionCurso4 extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		
+		
 		RequestDispatcher rd;
-		Fabrica fabrica = Fabrica.getInstancia();
-		IControladorInsEdicionCurso iciec = fabrica.getIControladorInsEdicionCurso();
+		
 		HttpSession session = request.getSession();
 		String logNick = (String)session.getAttribute("usuarioLogueado");
 		String edicion = (String)request.getParameter("edi");
-		if (request.getParameter("boton").equals("inscribir")) {
-			iciec.inscripcionEstudianteW(logNick, edicion);
-			request.setAttribute("mensaje", "Se ha inscripto correctamente el estudiante");
-		}else if (request.getParameter("boton").equals("cancelar")){
-			request.getRequestDispatcher("/index.jsp");
-		}
+		System.out.println(logNick);
+		System.out.println(edicion);
 		
-		rd = request.getRequestDispatcher("/InsEdiCursoMensaje.jsp");
-		rd.forward(request, response);
+		
+			try {
+				if (request.getParameter("boton").equals("inscribir")) {
+					System.out.println(logNick);
+					System.out.println(edicion);
+					inscripcionEstudianteW(logNick, edicion);
+					request.setAttribute("mensaje", "Se ha inscripto correctamente el estudiante");
+					rd= request.getRequestDispatcher("/notificacion.jsp");
+					rd.forward(request, response);
+					
+				}else if (request.getParameter("boton").equals("cancelar")){
+					rd=request.getRequestDispatcher("/index.jsp");
+					rd.forward(request, response);
+				}
+				
+				//rd = request.getRequestDispatcher("/InsEdiCursoMensaje.jsp");
+				
+				
+			
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	}
 
+	public void inscripcionEstudianteW(String nick, String edicion) throws Exception {
+		ControladorInsEdicionCursoPublishService ciecp = new ControladorInsEdicionCursoPublishServiceLocator();
+		ControladorInsEdicionCursoPublish port= ciecp.getControladorInsEdicionCursoPublishPort();
+		port.inscripcionEstudianteW(nick, edicion);
+	}
+	
+
+	
 }
